@@ -13,16 +13,21 @@ import (
 
 type VariableMap map[string]interface{}
 
+func stringSlice2Value(strSlice []string) any {
+	strSliceLen := len(strSlice)
+	if strSliceLen > 1 {
+		return strSlice
+	} else if strSliceLen == 1 {
+		return strSlice[0]
+	} else {
+		return ""
+	}
+}
+
 func values2Map(values url.Values) VariableMap {
-
 	ret := make(VariableMap)
-
 	for k, v := range values {
-		if len(v) > 1 {
-			ret[k] = v
-		} else {
-			ret[k] = v[0]
-		}
+		ret[k] = stringSlice2Value(v)
 	}
 	return ret
 }
@@ -40,7 +45,6 @@ func parsePathParams(fullPathStr string, basePath string) []string {
 	return retParamArr
 }
 
-
 func writeAccessControl(responseWriter http.ResponseWriter) {
 	responseWriter.Header().Set("Access-Control-Allow-Origin", "*")
 	responseWriter.Header().Set("Access-Control-Allow-Credentials", "true")
@@ -51,7 +55,7 @@ func writeJSONResponse(data interface{}, responseWriter http.ResponseWriter) {
 	responseWriter.Header().Set("Content-Type", "application/json")
 
 	// 收集到的信息转 JSON 返回给客户端
-	jsonBytesRet, err := json.MarshalIndent(data, "", "  ")
+	jsonBytesRet, err := json.MarshalIndent(data, "", "    ")
 
 	if err != nil {
 		fmt.Println("error: ", err)
@@ -67,7 +71,7 @@ func writeJSONResponse(data interface{}, responseWriter http.ResponseWriter) {
 	_, _ = fmt.Fprint(responseWriter, jsonStrRet)
 }
 
-type HTTPRequestHandler func (http.ResponseWriter, *http.Request)
+type HTTPRequestHandler func(http.ResponseWriter, *http.Request)
 
 func ProcessorWrapper(processor HTTPRequestHandler) HTTPRequestHandler {
 	return func(writer http.ResponseWriter, request *http.Request) {
