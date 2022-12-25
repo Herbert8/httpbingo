@@ -7,11 +7,12 @@ import (
 )
 
 func ProcGetCookies(w http.ResponseWriter, r *http.Request) {
-	cookieMap := make(map[string]string)
+	cookieMap := make(map[string]any)
 
-	for _, cookie := range r.Cookies() {
-		cookieMap[cookie.Name] = cookie.Value
-	}
+	//for _, cookie := range r.Cookies() {
+	//	cookieMap[cookie.Name] = cookie.Value
+	//}
+	cookieMap["cookies"] = r.Cookies()
 
 	writeJSONResponse(cookieMap, w)
 }
