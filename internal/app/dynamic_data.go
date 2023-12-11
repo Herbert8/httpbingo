@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/base64"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -67,8 +68,6 @@ func ProcDelay(w http.ResponseWriter, r *http.Request) {
 	ProcAnything(w, r)
 }
 
-
-
 func ProcData(w http.ResponseWriter, r *http.Request) {
 
 	// 内容
@@ -113,7 +112,6 @@ func ProcData(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write(responseBodyData)
 }
 
-
 func ProcDownload(w http.ResponseWriter, r *http.Request) {
 
 	// 指定默认文件名
@@ -133,33 +131,84 @@ func ProcDownload(w http.ResponseWriter, r *http.Request) {
 	ProcData(w, r)
 }
 
+type DataInfo struct {
+	Size        int    `json:"size"`
+	ContentType string `json:"Content-Type"`
+	Content     string `json:"content"`
+}
 
-
-func ProcDetect(w http.ResponseWriter, r *http.Request) {
-	type DataInfo struct {
-		Size        int    `json:"size"`
-		ContentType string `json:"Content-Type"`
-		Content     string `json:"content"`
-	}
-	// 读取 body 数据
-	dataBytes, _ := ioutil.ReadAll(r.Body)
-
+func data2DataInfo(dataBytes []byte) *DataInfo {
 	// 检测或指定数据类型
 	sContentType := http.DetectContentType(dataBytes)
 
 	var sContent string
 	var displayBytes []byte
-	if len(dataBytes) > 50 {
-		displayBytes = dataBytes[:50]
+	const MaxDataLen = 100
+	if len(dataBytes) > MaxDataLen {
+		displayBytes = dataBytes[:MaxDataLen]
 		sContent = string(displayBytes) + "..."
 	} else {
 		sContent = string(dataBytes)
 	}
 
-	dataInfo := DataInfo{
-		Size: len(dataBytes),
-		ContentType: sContentType,
-		Content: sContent,
+	retDataInfo := new(DataInfo)
+	retDataInfo.Size = len(dataBytes)
+	retDataInfo.ContentType = sContentType
+	retDataInfo.Content = sContent
+
+	return retDataInfo
+}
+
+func detectFormUrlencoded(r *http.Request) (*DataInfo, error) {
+	if !strings.Contains(r.Header.Get("Content-Type"), "application/x-www-form-urlencoded") {
+		return nil, nil
+	}
+
+	// 读取 body 数据
+	if dataBytes, err := ioutil.ReadAll(r.Body); err == nil {
+		return data2DataInfo(dataBytes), nil
+	} else {
+		return nil, err
+	}
+}
+
+func detectMultipartFormData(r *http.Request) (*DataInfo, error) {
+	if !strings.Contains(r.Header.Get("Content-Type"), "multipart/form-data") {
+		return nil, nil
+	}
+
+	// 解析表单数据，限制上传文件的大小
+	err := r.ParseMultipartForm(10 << 20) // 10 MB限制
+	if err != nil {
+		return nil, err
+	}
+
+	// 获取文件句柄
+	file, _, err := r.FormFile("file")
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		_ = file.Close()
+	}()
+
+	if dataBytes, err := io.ReadAll(file); err == nil {
+		return data2DataInfo(dataBytes), nil
+	} else {
+		return nil, err
+	}
+}
+
+func ProcDetect(w http.ResponseWriter, r *http.Request) {
+
+	var dataInfo *DataInfo
+	var err error
+	if dataInfo, err = detectMultipartFormData(r); dataInfo == nil {
+		dataInfo, err = detectFormUrlencoded(r)
+	}
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
 	writeJSONResponse(dataInfo, w)
