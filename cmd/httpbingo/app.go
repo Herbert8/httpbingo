@@ -10,9 +10,6 @@ import (
 	"os"
 )
 
-//go:embed doc/html/manual.html
-var sHelp string
-
 func main() {
 
 	//showSummary()
@@ -31,12 +28,6 @@ func main() {
 		service.ShowSummary()
 		os.Exit(0)
 	}
-
-	helpFunc := func(writer http.ResponseWriter, request *http.Request) {
-		_, _ = writer.Write([]byte(sHelp))
-	}
-	http.HandleFunc("/", helpFunc)
-	http.HandleFunc("/help", helpFunc)
 
 	// 启动服务
 	sPort := fmt.Sprintf(":%d", *nPort)

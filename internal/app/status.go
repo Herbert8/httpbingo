@@ -7,7 +7,7 @@ import (
 
 func ProcStatus(respWriter http.ResponseWriter, req *http.Request) {
 
-	pathParams := parsePathParams(req.URL.Path, "/status/")
+	pathParams := parsePathParams(req.URL.Path, 1)
 
 	// 从 URL 中解析出用于测试的 用户名、口令
 	sStatusCode := ""

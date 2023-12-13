@@ -35,17 +35,15 @@ func values2Map(values url.Values) VariableMap {
 	return ret
 }
 
-func parsePathParams(fullPathStr string, basePath string) []string {
-	paramPathStr := strings.Replace(fullPathStr, basePath, "", 1)
-	originalParamArr := strings.Split(paramPathStr, "/")
-
-	var retParamArr []string
-	for _, param := range originalParamArr {
-		if param != "" {
-			retParamArr = append(retParamArr, param)
-		}
+func parsePathParams(fullPathStr string, basePathComponentCount int) []string {
+	basePathComponentCountWithRootPath := basePathComponentCount + 1
+	// 拆分路径
+	originalParamArr := strings.Split(fullPathStr, "/")
+	if basePathComponentCountWithRootPath > len(originalParamArr)-1 {
+		return nil
 	}
-	return retParamArr
+
+	return originalParamArr[basePathComponentCountWithRootPath:]
 }
 
 func writeAccessControl(responseWriter http.ResponseWriter) {

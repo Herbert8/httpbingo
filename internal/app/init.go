@@ -9,12 +9,13 @@ func registerHandler() {
 	handleWrapperFunc("/cookies/delete", ProcDelCookies)
 	handleWrapperFunc("/redirect-to", ProcRedirectTo)
 	handleWrapperFunc("/basic-auth/", ProcBasicAuth)
+	handleWrapperFunc("/hidden-basic-auth/", ProcHiddenBasicAuth)
 	handleWrapperFunc("/delay/", ProcDelay)
 	handleWrapperFunc("/base64", ProcBase64)
 	handleWrapperFunc("/base64/", ProcBase64)
 	handleWrapperFunc("/data", ProcData)
-	handleWrapperFunc("/download", ProcDownload)
 	handleWrapperFunc("/detect", ProcDetect)
+	handleWrapperFunc("/detect/", ProcDetect)
 	handleWrapperFunc("/status", ProcStatus)
 	handleWrapperFunc("/status/", ProcStatus)
 	handleWrapperFunc("/response-headers", ProcResponseHeader)
@@ -29,6 +30,7 @@ func registerHandler() {
 	handleWrapperFunc("/image/webp", ProcWebP)
 	handleWrapperFunc("/image/gif", ProcGif)
 	handleWrapperFunc("/dump/request", ProcDumpRequest)
+	handleWrapperFunc("/stream", ProcStream)
 }
 
 func init() {

@@ -1,10 +1,10 @@
 package service
 
 import (
+	_ "embed"
 	"encoding/base64"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -17,7 +17,7 @@ func ProcBase64(w http.ResponseWriter, r *http.Request) {
 	var base64Str string
 
 	if strings.EqualFold("GET", r.Method) {
-		paramArr := parsePathParams(r.URL.Path, "/base64")
+		paramArr := parsePathParams(r.URL.Path, 1)
 		if len(paramArr) > 0 {
 			base64Str = paramArr[0]
 		}
@@ -46,7 +46,7 @@ func ProcBase64(w http.ResponseWriter, r *http.Request) {
 
 func ProcDelay(w http.ResponseWriter, r *http.Request) {
 
-	pathParams := parsePathParams(r.URL.Path, "/delay/")
+	pathParams := parsePathParams(r.URL.Path, 1)
 
 	var sParam string
 	if len(pathParams) > 0 {
@@ -70,146 +70,115 @@ func ProcDelay(w http.ResponseWriter, r *http.Request) {
 
 func ProcData(w http.ResponseWriter, r *http.Request) {
 
-	// 内容
+	// 解析表单
+	if err := r.ParseMultipartForm(10 << 20); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// 结果数据
+	var retData []byte
+
+	// 文本框内容
 	sContent := r.FormValue("content")
 
-	// 指定通过文件获取内容
-	sDataFile := r.FormValue("content-file")
-
-	// 如果指定了 content-file，则从指定文件读取内容
-	var fileData []byte
-	if sDataFile != "" {
-		tmpFileData, readFileErr := ioutil.ReadFile(sDataFile)
-		if readFileErr != nil {
-			http.Error(w, readFileErr.Error(), http.StatusNotFound)
-			return
+	// 获取文件句柄
+	if contentFile, _, err := r.FormFile("contentFile"); err != nil {
+		// 如果读取文件报错，判断文本框内容是否为空
+		// 如果文本框内容不为空，则使用文本框内容作为返回数据
+		if sContent != "" {
+			retData = []byte(sContent)
 		} else {
-			fileData = tmpFileData
+			// 如果文本框内容也为空，则报错
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+	} else {
+		// 处理正常读取文件的情况
+		defer func() {
+			_ = contentFile.Close()
+		}()
+		// 读取文件内容
+		if retData, err = io.ReadAll(contentFile); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
 		}
 	}
 
 	// 确定 Response Body
-	var responseBodyData []byte
-	if len(fileData) == 0 {
-		responseBodyData = []byte(sContent)
-	} else {
-		responseBodyData = fileData
-	}
+	responseBodyData := retData
 
 	// Content-Type
-	sContentType := r.FormValue("content-type")
+	sContentType := r.FormValue("contentType")
+
 	// Content-Type 默认值 application/octet-stream
-	if sContentType == "" {
+	if sContentType == "unknown" {
 		sContentType = "application/octet-stream"
 	}
-	// 如果 Content-Type 指定为 auto，则根据返回内容自动检测
-	if sContentType == "auto" {
+
+	// 如果 Content-Type 指定为 auto，或者没有指定，则根据返回内容自动检测
+	if sContentType == "" || sContentType == "auto" {
 		sContentType = http.DetectContentType(responseBodyData)
 	}
 
+	// 指定 Response 的 Content-Type
 	w.Header().Set("Content-Type", sContentType)
 
+	// 判断是否启用下载
+	if r.FormValue("downloadSwitch") != "" {
+
+		// 处理 Content-Type 为 text/html; charset=utf8; 的情况
+		// 只取分号前面的 MIME Type 部分
+		sMIMEType, _, _ := strings.Cut(sContentType, ";")
+		// MIME Type 对应的中文描述
+		sMIMETypeDescription := mimeTypeDictionary[sMIMEType]
+
+		// 遍历对应扩展名
+		var sFileExt string
+		for k, v := range fileExtNameDictionary {
+			if v == sMIMEType {
+				sFileExt = k
+				break
+			}
+		}
+		// 默认扩展名为 dat
+		if sFileExt == "" {
+			sFileExt = "dat"
+		}
+
+		// 获取用户指定的下载文件名
+		sFilename := r.FormValue("downloadFilename")
+		sFilename = strings.TrimSpace(sFilename)
+		// 如果没有指定
+		if sFilename == "" {
+			// 则使用 MIME Type 说明作为主文件名
+			if sMIMETypeDescription != "" {
+				sFilename = sMIMETypeDescription
+			} else {
+				// 如果 sMIMETypeDescription 也为空，则使用默认值
+				sFilename = "模拟数据"
+			}
+		}
+		// 与默认扩展名组合
+		sFilename = fmt.Sprintf("%s.%s", sFilename, sFileExt)
+
+		// 文件名 url 编码
+		sFilename = url.QueryEscape(sFilename)
+		// 通过 Response Header 指定下载信息
+		// 指定文件名，正常情况根据指定文件名及编码进行下载；对于不支持编码的情况，采用 ASCII 文件名 file.dat
+		sContentDisposition := fmt.Sprintf("attachment; filename=\"file.dat\"; filename*=utf-8''%s", sFilename)
+
+		// 指定 Response 的 Content-Disposition 头
+		w.Header().Set("Content-Disposition", sContentDisposition)
+	}
 	_, _ = w.Write(responseBodyData)
 }
 
-func ProcDownload(w http.ResponseWriter, r *http.Request) {
+//go:embed resource/web/content_uploader.html
+var dataContentUploaderHtml []byte
 
-	// 指定默认文件名
-	sFilename := r.FormValue("filename")
-	if sFilename == "" {
-		sFilename = "测试.dat"
-	}
-
-	// 文件名 url 编码
-	sFilename = url.QueryEscape(sFilename)
-	// 通过 Response Header 指定下载信息
-	// 指定文件名，正常情况根据指定文件名及编码进行下载；对于不支持编码的情况，采用 ASCII 文件名 file.dat
-	sContentDisposition := fmt.Sprintf("attachment; filename=\"file.dat\"; filename*=utf-8''%s", sFilename)
-
-	w.Header().Set("Content-Disposition", sContentDisposition)
-
-	ProcData(w, r)
-}
-
-type DataInfo struct {
-	Size        int    `json:"size"`
-	ContentType string `json:"Content-Type"`
-	Content     string `json:"content"`
-}
-
-func data2DataInfo(dataBytes []byte) *DataInfo {
-	// 检测或指定数据类型
-	sContentType := http.DetectContentType(dataBytes)
-
-	var sContent string
-	var displayBytes []byte
-	const MaxDataLen = 100
-	if len(dataBytes) > MaxDataLen {
-		displayBytes = dataBytes[:MaxDataLen]
-		sContent = string(displayBytes) + "..."
-	} else {
-		sContent = string(dataBytes)
-	}
-
-	retDataInfo := new(DataInfo)
-	retDataInfo.Size = len(dataBytes)
-	retDataInfo.ContentType = sContentType
-	retDataInfo.Content = sContent
-
-	return retDataInfo
-}
-
-func detectFormUrlencoded(r *http.Request) (*DataInfo, error) {
-	if !strings.Contains(r.Header.Get("Content-Type"), "application/x-www-form-urlencoded") {
-		return nil, nil
-	}
-
-	// 读取 body 数据
-	if dataBytes, err := ioutil.ReadAll(r.Body); err == nil {
-		return data2DataInfo(dataBytes), nil
-	} else {
-		return nil, err
-	}
-}
-
-func detectMultipartFormData(r *http.Request) (*DataInfo, error) {
-	if !strings.Contains(r.Header.Get("Content-Type"), "multipart/form-data") {
-		return nil, nil
-	}
-
-	// 解析表单数据，限制上传文件的大小
-	err := r.ParseMultipartForm(10 << 20) // 10 MB限制
-	if err != nil {
-		return nil, err
-	}
-
-	// 获取文件句柄
-	file, _, err := r.FormFile("file")
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		_ = file.Close()
-	}()
-
-	if dataBytes, err := io.ReadAll(file); err == nil {
-		return data2DataInfo(dataBytes), nil
-	} else {
-		return nil, err
-	}
-}
-
-func ProcDetect(w http.ResponseWriter, r *http.Request) {
-
-	var dataInfo *DataInfo
-	var err error
-	if dataInfo, err = detectMultipartFormData(r); dataInfo == nil {
-		dataInfo, err = detectFormUrlencoded(r)
-	}
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-
-	writeJSONResponse(dataInfo, w)
+func init() {
+	http.HandleFunc("/data/config", func(writer http.ResponseWriter, request *http.Request) {
+		_, _ = writer.Write(dataContentUploaderHtml)
+	})
 }
