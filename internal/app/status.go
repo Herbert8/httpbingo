@@ -1,6 +1,7 @@
 package service
 
 import (
+	"httpbingo/internal/httputils"
 	"net/http"
 	"strconv"
 )
@@ -17,12 +18,11 @@ func ProcStatus(respWriter http.ResponseWriter, req *http.Request) {
 	nStatusCode, err := strconv.Atoi(sStatusCode)
 	if err != nil {
 		nStatusCode = http.StatusBadRequest
-		http.Error(respWriter, "Invalid status code", nStatusCode)
+		httputils.Error(respWriter, "Invalid status code", nStatusCode)
 		return
 	}
 	if nStatusCode >= 300 && nStatusCode <= 399 {
 		respWriter.Header().Set("Location", "/anything")
 	}
-	http.Error(respWriter, http.StatusText(nStatusCode), nStatusCode)
-	//respWriter.WriteHeader(nStatusCode)
+	httputils.ErrorWithDefaultStatusText(respWriter, nStatusCode)
 }

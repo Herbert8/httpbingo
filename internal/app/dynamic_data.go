@@ -4,6 +4,7 @@ import (
 	_ "embed"
 	"encoding/base64"
 	"fmt"
+	"httpbingo/internal/httputils"
 	"io"
 	"net/http"
 	"net/url"
@@ -72,7 +73,7 @@ func ProcData(w http.ResponseWriter, r *http.Request) {
 
 	// 解析表单
 	if err := r.ParseMultipartForm(10 << 20); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		httputils.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -90,7 +91,7 @@ func ProcData(w http.ResponseWriter, r *http.Request) {
 			retData = []byte(sContent)
 		} else {
 			// 如果文本框内容也为空，则报错
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			httputils.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 	} else {
@@ -100,7 +101,7 @@ func ProcData(w http.ResponseWriter, r *http.Request) {
 		}()
 		// 读取文件内容
 		if retData, err = io.ReadAll(contentFile); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			httputils.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 	}

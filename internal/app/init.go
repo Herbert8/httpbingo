@@ -10,6 +10,7 @@ func registerHandler() {
 	handleWrapperFunc("/redirect-to", ProcRedirectTo)
 	handleWrapperFunc("/basic-auth/", ProcBasicAuth)
 	handleWrapperFunc("/hidden-basic-auth/", ProcHiddenBasicAuth)
+	handleWrapperFunc("/bearer", ProcBearer)
 	handleWrapperFunc("/delay/", ProcDelay)
 	handleWrapperFunc("/base64", ProcBase64)
 	handleWrapperFunc("/base64/", ProcBase64)

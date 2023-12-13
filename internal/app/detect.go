@@ -2,6 +2,7 @@ package service
 
 import (
 	_ "embed"
+	"httpbingo/internal/httputils"
 	"io"
 	"net/http"
 	"strings"
@@ -88,7 +89,7 @@ func ProcDetect(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		httputils.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
 	writeJSONResponse(dataInfo, w)
