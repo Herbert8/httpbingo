@@ -183,3 +183,77 @@ func init() {
 		_, _ = writer.Write(dataContentUploaderHtml)
 	})
 }
+
+func ProcSSE(w http.ResponseWriter, r *http.Request) {
+	// 设置响应头，指定SSE的Content-Type和缓存控制
+	w.Header().Set("Content-Type", "text/event-stream")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Connection", "keep-alive")
+
+	// 在这个示例中，我们每秒向客户端发送一个简单的消息
+	for i := 0; i < 10; i++ {
+		message := fmt.Sprintf("Message %d at %s", i, time.Now().Format(time.RFC3339))
+		// 将事件发送到客户端
+		_, _ = fmt.Fprintf(w, "data: %s\n\n", message)
+		// 强制刷新响应，确保事件立即发送到客户端
+		w.(http.Flusher).Flush()
+		time.Sleep(1 * time.Second)
+	}
+}
+
+const sseTestPage = `
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSE 测试页面</title>
+</head>
+
+<body>
+    <h1>SSE 测试</h1>
+
+    <ul>
+        <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events" target="_blank"
+                rel="noopener noreferrer">Server-sent events</a></li>
+        <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events"
+                target="_blank" rel="noopener noreferrer">Using server-sent events</a></li>
+        <li><a href="https://www.ruanyifeng.com/blog/2017/05/server-sent_events.html" target="_blank"
+                rel="noopener noreferrer">Server-Sent Events 教程</a></li>
+    </ul>
+
+	<br>
+	测试数据：<br>
+    <pre id="sse-content" style="background-color: bisque;"></pre>
+
+    <script>
+        // 创建一个EventSource对象，连接到SSE服务端点
+        const eventSource = new EventSource("../sse");
+
+        // 处理接收到的事件
+        eventSource.onmessage = function (event) {
+            // 在页面上显示接收到的消息
+            const sseContent = document.getElementById("sse-content");
+            sseContent.innerHTML += event.data + "<br>";
+        };
+
+        // 处理连接错误
+        eventSource.onerror = function (error) {
+            console.error("EventSource failed:", error);
+            eventSource.close();
+        };
+    </script>
+
+
+</body>
+
+</html>
+`
+
+func init() {
+	http.HandleFunc("/sse", ProcSSE)
+	http.HandleFunc("/sse/test", func(writer http.ResponseWriter, request *http.Request) {
+		_, _ = writer.Write([]byte(sseTestPage))
+	})
+}
