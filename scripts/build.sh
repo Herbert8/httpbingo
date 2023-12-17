@@ -27,7 +27,7 @@ do_build () {
     local output_file
     output_file=$(realpath "$BASE_DIR/../build")/$(gen_bin_file)
     local cmd_line=(go build --ldflags="-s -w" "$@" -o "$output_file" "$MODULE_PATH")
-    echo "[ OS: $os  Architechture: $arch ]"
+    echo "[ OS: $os  Architecture: $arch ]"
     echo "${cmd_line[@]}"
     "${cmd_line[@]}"
 }

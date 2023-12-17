@@ -9,8 +9,9 @@ convert_json_yaml:
 	yq eval -P < api/openapi-spec/HTTPBinGo.openapi.json > api/openapi-spec/HTTPBinGo.openapi.yaml
 
 gen_redoc: convert_json_yaml
-	npx @redocly/cli build-docs api/openapi-spec/HTTPBinGo.openapi.yaml -o cmd/httpbingo/doc/html/redoc.html
-#open -R cmd/httpbingo/doc/html/redoc.html
+#	npx @redocly/cli build-docs api/openapi-spec/HTTPBinGo.openapi.yaml -o cmd/httpbingo/doc/html/redoc.html
+	redocly build-docs api/openapi-spec/HTTPBinGo.openapi.yaml -o cmd/httpbingo/doc/html/redoc.html
+#	open -R cmd/httpbingo/doc/html/redoc.html
 
 gen_swagger:
 	cat api/HTTPBinGo.html | sed 's|<title>Apifox 接口文档</title>|<title>HTTPBinGo 使用说明</title>|g' > cmd/httpbingo/doc/html/swagger.html
