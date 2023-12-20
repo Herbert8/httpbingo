@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"httpbingo/internal/httputils"
 	"io"
+	"mime/multipart"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -69,7 +70,34 @@ func ProcDelay(w http.ResponseWriter, r *http.Request) {
 	ProcAnything(w, r)
 }
 
+func readFileFromRequest(r *http.Request, fieldName string) (data []byte, err error) {
+	var contentFile multipart.File
+	// 获取文件句柄
+	if contentFile, _, err = r.FormFile(fieldName); err != nil {
+		return nil, err
+	}
+
+	// 处理正常读取文件的情况
+	defer func() {
+		_ = contentFile.Close()
+	}()
+
+	// 读取文件内容
+	if data, err = io.ReadAll(contentFile); err != nil {
+		return nil, err
+	}
+
+	return
+}
+
 func ProcData(w http.ResponseWriter, r *http.Request) {
+
+	const FieldContent = "content"
+	const FieldContentType = "content_type"
+	const FieldAsDownload = "as_download"
+	const FieldDownloadFilename = "download_filename"
+	const FieldContentFile = "content_file"
+	const ContentTypeByteStream = "application/octet-stream"
 
 	// 解析表单
 	if err := r.ParseMultipartForm(10 << 20); err != nil {
@@ -79,12 +107,15 @@ func ProcData(w http.ResponseWriter, r *http.Request) {
 
 	// 结果数据
 	var retData []byte
+	var err error
 
-	// 文本框内容
-	sContent := r.FormValue("content")
+	// 先从文件字段读取内容
+	retData, err = readFileFromRequest(r, FieldContentFile)
 
-	// 获取文件句柄
-	if contentFile, _, err := r.FormFile("contentFile"); err != nil {
+	// 如果从文件字段没有读取到内容，则使用 文本框 输入的内容
+	if retData == nil {
+		// 文本框内容
+		sContent := r.FormValue(FieldContent)
 		// 如果读取文件报错，判断文本框内容是否为空
 		// 如果文本框内容不为空，则使用文本框内容作为返回数据
 		if sContent != "" {
@@ -94,27 +125,17 @@ func ProcData(w http.ResponseWriter, r *http.Request) {
 			httputils.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-	} else {
-		// 处理正常读取文件的情况
-		defer func() {
-			_ = contentFile.Close()
-		}()
-		// 读取文件内容
-		if retData, err = io.ReadAll(contentFile); err != nil {
-			httputils.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
 	}
 
 	// 确定 Response Body
 	responseBodyData := retData
 
-	// Content-Type
-	sContentType := r.FormValue("contentType")
+	// 读取用户输入的 Content-Type
+	sContentType := r.FormValue(FieldContentType)
 
 	// Content-Type 默认值 application/octet-stream
 	if sContentType == "unknown" {
-		sContentType = "application/octet-stream"
+		sContentType = ContentTypeByteStream
 	}
 
 	// 如果 Content-Type 指定为 auto，或者没有指定，则根据返回内容自动检测
@@ -126,7 +147,7 @@ func ProcData(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", sContentType)
 
 	// 判断是否启用下载
-	if r.FormValue("downloadSwitch") != "" {
+	if r.FormValue(FieldAsDownload) != "" {
 
 		// 处理 Content-Type 为 text/html; charset=utf8; 的情况
 		// 只取分号前面的 MIME Type 部分
@@ -148,7 +169,7 @@ func ProcData(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// 获取用户指定的下载文件名
-		sFilename := r.FormValue("downloadFilename")
+		sFilename := r.FormValue(FieldDownloadFilename)
 		sFilename = strings.TrimSpace(sFilename)
 		// 如果没有指定
 		if sFilename == "" {
@@ -159,9 +180,9 @@ func ProcData(w http.ResponseWriter, r *http.Request) {
 				// 如果 sMIMETypeDescription 也为空，则使用默认值
 				sFilename = "模拟数据"
 			}
+			// 与默认扩展名组合
+			sFilename = fmt.Sprintf("%s.%s", sFilename, sFileExt)
 		}
-		// 与默认扩展名组合
-		sFilename = fmt.Sprintf("%s.%s", sFilename, sFileExt)
 
 		// 文件名 url 编码
 		sFilename = url.QueryEscape(sFilename)
@@ -175,7 +196,7 @@ func ProcData(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write(responseBodyData)
 }
 
-//go:embed resource/web/content_uploader.html
+//go:embed resource/web/content_config.html
 var dataContentUploaderHtml []byte
 
 func init() {

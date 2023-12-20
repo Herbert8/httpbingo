@@ -8,6 +8,7 @@ func registerHandler() {
 	handleWrapperFunc("/cookies/set-detail/", ProcSetCookieDetail)
 	handleWrapperFunc("/cookies/delete", ProcDelCookies)
 	handleWrapperFunc("/redirect-to", ProcRedirectTo)
+	handleWrapperFunc("/web-redirect-to", ProcWebRedirectTo)
 	handleWrapperFunc("/basic-auth/", ProcBasicAuth)
 	handleWrapperFunc("/hidden-basic-auth/", ProcHiddenBasicAuth)
 	handleWrapperFunc("/bearer", ProcBearer)

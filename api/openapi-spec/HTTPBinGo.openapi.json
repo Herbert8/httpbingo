@@ -10,7 +10,7 @@
       "name": "操作 Cookie"
     },
     {
-      "name": "Anything"
+      "name": "获取任意请求的信息"
     },
     {
       "name": "重定向"
@@ -28,22 +28,22 @@
       "name": "数据探测"
     },
     {
-      "name": "数据格式"
+      "name": "获得指定数据格式的内容"
     },
     {
-      "name": "Data Dump"
+      "name": "数据倾卸"
     }
   ],
   "paths": {
     "/anything": {
       "get": {
         "summary": "获取请求的所有信息",
-        "x-apifox-folder": "Anything",
+        "x-apifox-folder": "获取任意请求的信息",
         "x-apifox-status": "developing",
         "deprecated": false,
         "description": "获取请求的详细信息。\n\n\n\n- cURL 示例\n```bash\ncurl -i \"http://${base_url}/anything\"\n```\n\n- HTTP 示例\n```http\nGET {{base_url}}/anything\n```\n",
         "tags": [
-          "Anything"
+          "获取任意请求的信息"
         ],
         "parameters": [],
         "responses": {
@@ -794,67 +794,6 @@
         "security": []
       }
     },
-    "/data": {
-      "get": {
-        "summary": "模拟获取数据（GET 传参）",
-        "x-apifox-folder": "动态数据",
-        "x-apifox-status": "developing",
-        "deprecated": false,
-        "description": "根据指定参数，模拟返回内容。",
-        "tags": [
-          "动态数据"
-        ],
-        "parameters": [
-          {
-            "name": "content",
-            "in": "query",
-            "description": "需要通过 Response 返回的内容。",
-            "required": true,
-            "example": "abcxyz123",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "content-type",
-            "in": "query",
-            "description": "指定通过 Response 返回内容的 Content-Type。\n如不指定，默认值为 application/octet-stream。\n如指定为 auto，则自动检测数据测 Content-Type。",
-            "required": false,
-            "example": "application/octet-stream",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "filename",
-            "in": "query",
-            "description": "指定通过 Response 返回的内容的文件名。",
-            "required": false,
-            "example": "我的文件.txt",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "成功",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "x-apifox-ignore-properties": [],
-                  "x-apifox-orders": []
-                }
-              }
-            }
-          }
-        },
-        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132083898-run",
-        "security": []
-      }
-    },
     "/status/{code}": {
       "get": {
         "summary": "指定返回状态码",
@@ -1167,12 +1106,12 @@
     "/image/jpeg": {
       "get": {
         "summary": "返回 JPEG 图像",
-        "x-apifox-folder": "数据格式",
+        "x-apifox-folder": "获得指定数据格式的内容",
         "x-apifox-status": "developing",
         "deprecated": false,
         "description": "",
         "tags": [
-          "数据格式"
+          "获得指定数据格式的内容"
         ],
         "parameters": [],
         "responses": {
@@ -1197,12 +1136,12 @@
     "/image/png": {
       "get": {
         "summary": "返回 PNG 图像",
-        "x-apifox-folder": "数据格式",
+        "x-apifox-folder": "获得指定数据格式的内容",
         "x-apifox-status": "developing",
         "deprecated": false,
         "description": "",
         "tags": [
-          "数据格式"
+          "获得指定数据格式的内容"
         ],
         "parameters": [],
         "responses": {
@@ -1227,12 +1166,12 @@
     "/image/svg": {
       "get": {
         "summary": "返回 SVG 图像",
-        "x-apifox-folder": "数据格式",
+        "x-apifox-folder": "获得指定数据格式的内容",
         "x-apifox-status": "developing",
         "deprecated": false,
         "description": "",
         "tags": [
-          "数据格式"
+          "获得指定数据格式的内容"
         ],
         "parameters": [],
         "responses": {
@@ -1257,12 +1196,12 @@
     "/image/webp": {
       "get": {
         "summary": "返回 WebP 图像",
-        "x-apifox-folder": "数据格式",
+        "x-apifox-folder": "获得指定数据格式的内容",
         "x-apifox-status": "developing",
         "deprecated": false,
         "description": "",
         "tags": [
-          "数据格式"
+          "获得指定数据格式的内容"
         ],
         "parameters": [],
         "responses": {
@@ -1287,12 +1226,12 @@
     "/image/gif": {
       "get": {
         "summary": "返回 GIF 图像",
-        "x-apifox-folder": "数据格式",
+        "x-apifox-folder": "获得指定数据格式的内容",
         "x-apifox-status": "developing",
         "deprecated": false,
         "description": "",
         "tags": [
-          "数据格式"
+          "获得指定数据格式的内容"
         ],
         "parameters": [],
         "responses": {
@@ -1317,12 +1256,12 @@
     "/image/json": {
       "get": {
         "summary": "返回 JSON 数据",
-        "x-apifox-folder": "数据格式",
+        "x-apifox-folder": "获得指定数据格式的内容",
         "x-apifox-status": "developing",
         "deprecated": false,
         "description": "",
         "tags": [
-          "数据格式"
+          "获得指定数据格式的内容"
         ],
         "parameters": [],
         "responses": {
@@ -1347,12 +1286,12 @@
     "/image/xml": {
       "get": {
         "summary": "返回 XML 数据",
-        "x-apifox-folder": "数据格式",
+        "x-apifox-folder": "获得指定数据格式的内容",
         "x-apifox-status": "developing",
         "deprecated": false,
         "description": "",
         "tags": [
-          "数据格式"
+          "获得指定数据格式的内容"
         ],
         "parameters": [],
         "responses": {
@@ -1377,12 +1316,12 @@
     "/image/html": {
       "get": {
         "summary": "返回 HTML 数据",
-        "x-apifox-folder": "数据格式",
+        "x-apifox-folder": "获得指定数据格式的内容",
         "x-apifox-status": "developing",
         "deprecated": false,
         "description": "",
         "tags": [
-          "数据格式"
+          "获得指定数据格式的内容"
         ],
         "parameters": [],
         "responses": {
@@ -1407,12 +1346,12 @@
     "/image/gzip": {
       "get": {
         "summary": "返回 Gzip 数据",
-        "x-apifox-folder": "数据格式",
+        "x-apifox-folder": "获得指定数据格式的内容",
         "x-apifox-status": "developing",
         "deprecated": false,
         "description": "",
         "tags": [
-          "数据格式"
+          "获得指定数据格式的内容"
         ],
         "parameters": [],
         "responses": {
@@ -1437,12 +1376,12 @@
     "/dump/request": {
       "get": {
         "summary": "显示请求的原始信息",
-        "x-apifox-folder": "Data Dump",
+        "x-apifox-folder": "数据倾卸",
         "x-apifox-status": "developing",
         "deprecated": false,
         "description": "将请求的原始信息作为 Response 的 Body 返回。",
         "tags": [
-          "Data Dump"
+          "数据倾卸"
         ],
         "parameters": [],
         "responses": {
@@ -1467,12 +1406,12 @@
     "/encoding/utf8": {
       "get": {
         "summary": "返回编码为 UTF-8 的内容",
-        "x-apifox-folder": "数据格式",
+        "x-apifox-folder": "获得指定数据格式的内容",
         "x-apifox-status": "developing",
         "deprecated": false,
         "description": "",
         "tags": [
-          "数据格式"
+          "获得指定数据格式的内容"
         ],
         "parameters": [],
         "responses": {
@@ -1493,6 +1432,129 @@
         "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132118050-run",
         "security": []
       }
+    },
+    "/data": {
+      "post": {
+        "summary": "模拟返回数据",
+        "x-apifox-folder": "动态数据",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "根据配置，模拟返回数据。\n\n\n\n\n- cURL 示例\n\n```bash\ncurl \"${base_url}\" \\\n     -F 'content_file=@content_file.txt' \\\n     -F 'content=content-abc' \\\n     -F 'as_download=1' \\\n     -F 'content_type=text/plain' \\\n     -F 'download_filename=filename.txt'\n```\n\n",
+        "tags": [
+          "动态数据"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content_file": {
+                    "type": "string",
+                    "description": "使用这里上传文件的内容作为返回。",
+                    "format": "binary"
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "需要通过 Response 返回的内容。",
+                    "example": "Test text."
+                  },
+                  "as_download": {
+                    "type": "integer",
+                    "description": "返回的内容以下载形式提供。",
+                    "example": "1,true"
+                  },
+                  "download_filename": {
+                    "type": "string",
+                    "description": "指定下载时使用的文件名。",
+                    "example": "我的文件.txt"
+                  },
+                  "content_type": {
+                    "type": "string",
+                    "description": "指定通过 Response 返回内容的 Content-Type。\n如不指定或指定为 auto，则自动检测数据测 Content-Type。",
+                    "example": "application/octet-stream"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-134780462-run",
+        "security": []
+      }
+    },
+    "/web-redirect-to": {
+      "get": {
+        "summary": "页面重定向",
+        "x-apifox-folder": "重定向",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "通过返回 HTML 中的 <meta> 标签使页面重定向。\n\n如：\n```html\n<html>\n<meta http-equiv=\"refresh\" content=\"0;url=http://www.baidu.com/\">\n</html>\n```\n\n- cURL 示例\n```bash\ncurl -iL \"${base_url}/web-redirect-to?url=http://baidu.com&delay=3\"\n```\n\n- HTTP 示例\n```http\nGET {{base_url}}/web-redirect-to?url=http://baidu.com&delay=3\n```",
+        "tags": [
+          "重定向"
+        ],
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "description": "跳转到的 URL。",
+            "required": false,
+            "example": "http://baidu.com",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "delay",
+            "in": "query",
+            "description": "延迟的秒数。",
+            "required": false,
+            "example": "3",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": "<html>\n<meta http-equiv=\"refresh\" content=\"0;url=http://www.baidu.com/\">\n</html>\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-135341886-run",
+        "security": []
+      }
     }
   },
   "components": {
@@ -1502,7 +1564,7 @@
   "servers": [
     {
       "url": "http://localhost:8080",
-      "description": "开发环境"
+      "description": "正式环境"
     }
   ]
 }

@@ -1,3 +1,23 @@
+---
+title: HTTPBinGo v1.0.0
+language_tabs:
+  - shell: Shell
+  - http: HTTP
+  - javascript: JavaScript
+  - ruby: Ruby
+  - python: Python
+  - php: PHP
+  - java: Java
+  - go: Go
+toc_footers: []
+includes: []
+search: true
+code_clipboard: true
+highlight_theme: darkula
+headingLevel: 2
+generator: "@tarslib/widdershins v4.0.17"
+
+---
 
 # HTTPBinGo
 
@@ -16,7 +36,7 @@
 
 Base URLs:
 
-* <a href="http://localhost:8080">开发环境: http://localhost:8080</a>
+* <a href="http://localhost:8080">正式环境: http://localhost:8080</a>
 
 # Authentication
 
@@ -39,7 +59,7 @@ curl -iL -c "cookie.txt" \
 GET {{base_url}}/cookies
 ```
 
-> 返回示例
+> Response Examples
 
 > 成功
 
@@ -76,17 +96,17 @@ GET {{base_url}}/cookies
 }
 ```
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
 
-状态码 **200**
+HTTP Status Code **200**
 
-|名称|类型|必选|约束|中文名|说明|
+|Name|Type|Required|Restrictions|Title|description|
 |---|---|---|---|---|---|
 |» cookies|[object]|true|none||none|
 |»» Name|string|true|none||none|
@@ -122,24 +142,24 @@ curl -iL -c "cookie.txt" \
 GET {{base_url}}/cookies/set?key1=value1&key2=value2
 ```
 
-### 请求参数
+### Params
 
-|名称|位置|类型|必选|说明|
+|Name|Location|Type|Required|Description|
 |---|---|---|---|---|
-|key1|query|string| 否 |none|
-|key2|query|string| 否 |none|
+|key1|query|string| no |none|
+|key2|query|string| no |none|
 
-> 返回示例
+> Response Examples
 
 > 成功
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |302|[Found](https://tools.ietf.org/html/rfc7231#section-6.4.3)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
 
 ## GET 设置 Cookie 的详细信息
 
@@ -162,26 +182,26 @@ curl -iL -c "cookie.txt" \
 GET {{base_url}}/cookies/set-detail/key/value?secure=1&httponly=1
 ```
 
-### 请求参数
+### Params
 
-|名称|位置|类型|必选|说明|
+|Name|Location|Type|Required|Description|
 |---|---|---|---|---|
-|key|path|string| 是 |指定要设置的 Cookie 的 Key。|
-|value|path|string| 是 |指定要设置的 Cookie 的 Value。|
-|secure|query|integer| 否 |指定 Cookie 的安全性，值为 1 时，Cookie 只有在使用 HTTPS 的时候才能携带到服务端。|
-|httponly|query|integer| 否 |指定 Cookie 必须由 HTTP 的 Response 指定，无法通过脚本等手段设置。|
+|key|path|string| yes |指定要设置的 Cookie 的 Key。|
+|value|path|string| yes |指定要设置的 Cookie 的 Value。|
+|secure|query|integer| no |指定 Cookie 的安全性，值为 1 时，Cookie 只有在使用 HTTPS 的时候才能携带到服务端。|
+|httponly|query|integer| no |指定 Cookie 必须由 HTTP 的 Response 指定，无法通过脚本等手段设置。|
 
-> 返回示例
+> Response Examples
 
 > 成功
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |302|[Found](https://tools.ietf.org/html/rfc7231#section-6.4.3)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
 
 ## GET 删除客户端 Cookie
 
@@ -201,26 +221,26 @@ curl -iL  "http://${base_url}/cookies/delete?key1&key2"
 GET {{base_url}}/cookies/delete?key1&key2
 ```
 
-### 请求参数
+### Params
 
-|名称|位置|类型|必选|说明|
+|Name|Location|Type|Required|Description|
 |---|---|---|---|---|
-|key1|query|string| 否 |none|
-|key2|query|string| 否 |none|
+|key1|query|string| no |none|
+|key2|query|string| no |none|
 
-> 返回示例
+> Response Examples
 
 > 成功
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |302|[Found](https://tools.ietf.org/html/rfc7231#section-6.4.3)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
 
-# Anything
+# 获取任意请求的信息
 
 ## GET 获取请求的所有信息
 
@@ -238,7 +258,7 @@ curl -i "http://${base_url}/anything"
 GET {{base_url}}/anything
 ```
 
-> 返回示例
+> Response Examples
 
 > 成功
 
@@ -253,7 +273,7 @@ GET {{base_url}}/anything
     "Host": "localhost:8080",
     "User-Agent": "curl/8.1.2"
   },
-  "json": null,
+  "json": {},
   "method": "GET",
   "url": "/anything",
   "server_endpoints": [
@@ -266,27 +286,27 @@ GET {{base_url}}/anything
 }
 ```
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
 
-状态码 **200**
+HTTP Status Code **200**
 
-|名称|类型|必选|约束|中文名|说明|
+|Name|Type|Required|Restrictions|Title|description|
 |---|---|---|---|---|---|
 |» args|object|true|none||none|
 |» data|string|true|none||none|
 |» files|object|true|none||none|
 |» form|object|true|none||none|
 |» headers|object|true|none||none|
-|»» Accept|string|false|none||none|
-|»» Host|string|false|none||none|
-|»» User-Agent|string|false|none||none|
-|» json|null|true|none||none|
+|»» Accept|string|true|none||none|
+|»» Host|string|true|none||none|
+|»» User-Agent|string|true|none||none|
+|» json|object|true|none||none|
 |» method|string|true|none||none|
 |» url|string|true|none||none|
 |» server_endpoints|[string]|true|none||none|
@@ -310,24 +330,66 @@ curl -iL "${base_url}/redirect-to?url=${base_url}/anything&status_code=302"
 GET {{base_url}}/redirect-to?url={{base_url}}/anything&status_code=302
 ```
 
-### 请求参数
+### Params
 
-|名称|位置|类型|必选|说明|
+|Name|Location|Type|Required|Description|
 |---|---|---|---|---|
-|url|query|string| 否 |跳转到的 URL。|
-|status_code|query|integer| 否 |状态码。|
+|url|query|string| no |跳转到的 URL。|
+|status_code|query|integer| no |状态码。|
 
-> 返回示例
+> Response Examples
 
 > 302 Response
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |302|[Found](https://tools.ietf.org/html/rfc7231#section-6.4.3)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
+
+## GET 页面重定向
+
+GET /web-redirect-to
+
+通过返回 HTML 中的 <meta> 标签使页面重定向。
+
+如：
+```html
+<html>
+<meta http-equiv="refresh" content="0;url=http://www.baidu.com/">
+</html>
+```
+
+- cURL 示例
+```bash
+curl -iL "${base_url}/web-redirect-to?url=http://baidu.com&delay=3"
+```
+
+- HTTP 示例
+```http
+GET {{base_url}}/web-redirect-to?url=http://baidu.com&delay=3
+```
+
+### Params
+
+|Name|Location|Type|Required|Description|
+|---|---|---|---|---|
+|url|query|string| no |跳转到的 URL。|
+|delay|query|integer| no |延迟的秒数。|
+
+> Response Examples
+
+> 成功
+
+### Responses
+
+|HTTP Status Code |Meaning|Description|Data schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
+
+### Responses Data Schema
 
 # 认证
 
@@ -353,14 +415,14 @@ curl "${base_url}/basic-auth/my-username/my-password" -i -u 'my-username:my-pass
 GET {{base_url}}/basic-auth/my-username/my-password
 ```
 
-### 请求参数
+### Params
 
-|名称|位置|类型|必选|说明|
+|Name|Location|Type|Required|Description|
 |---|---|---|---|---|
-|user|path|string| 是 |用户名|
-|passwd|path|string| 是 |密码|
+|user|path|string| yes |用户名|
+|passwd|path|string| yes |密码|
 
-> 返回示例
+> Response Examples
 
 > 成功
 
@@ -373,18 +435,18 @@ GET {{base_url}}/basic-auth/my-username/my-password
 
 > 没有权限
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|没有权限|Inline|
 
-### 返回数据结构
+### Responses Data Schema
 
-状态码 **200**
+HTTP Status Code **200**
 
-|名称|类型|必选|约束|中文名|说明|
+|Name|Type|Required|Restrictions|Title|description|
 |---|---|---|---|---|---|
 |» authenticated|boolean|true|none||none|
 |» user|string|true|none||none|
@@ -411,13 +473,13 @@ curl "${base_url}/delay/5"
 GET {{base_url}}/delay/5
 ```
 
-### 请求参数
+### Params
 
-|名称|位置|类型|必选|说明|
+|Name|Location|Type|Required|Description|
 |---|---|---|---|---|
-|delay|path|integer| 是 |指定延时时间（秒）。|
+|delay|path|integer| yes |指定延时时间（秒）。|
 
-> 返回示例
+> Response Examples
 
 > 200 Response
 
@@ -425,13 +487,13 @@ GET {{base_url}}/delay/5
 {}
 ```
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
 
 ## POST Base64 解码（Body 传参）
 
@@ -457,31 +519,31 @@ Content-Type: application/x-www-form-urlencoded
 base64=SFRUUEJJTl9HTyBpcyBhd2Vzb21l
 ```
 
-> Body 请求参数
+> Body Parameters
 
 ```yaml
 base64: SFRUUEJJTl9HTyBpcyBhd2Vzb21l
 
 ```
 
-### 请求参数
+### Params
 
-|名称|位置|类型|必选|说明|
+|Name|Location|Type|Required|Description|
 |---|---|---|---|---|
-|body|body|object| 否 |none|
-|» base64|body|string| 否 |Base64 编码的数据|
+|body|body|object| no |none|
+|» base64|body|string| no |Base64 编码的数据|
 
-> 返回示例
+> Response Examples
 
 > 成功
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
 
 ## GET Base64 解码（Path 传参）
 
@@ -503,59 +565,23 @@ curl "${base_url}/base64/SFRUUEJJTl9HTyBpcyBhd2Vzb21l"
 GET {{base_url}}/base64/SFRUUEJJTl9HTyBpcyBhd2Vzb21l
 ```
 
-### 请求参数
+### Params
 
-|名称|位置|类型|必选|说明|
+|Name|Location|Type|Required|Description|
 |---|---|---|---|---|
-|base64-value|path|string| 是 |none|
+|base64-value|path|string| yes |none|
 
-> 返回示例
+> Response Examples
 
 > 成功
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
 
-### 返回数据结构
-
-## GET 模拟获取数据（GET 传参）
-
-GET /data
-
-根据指定参数，模拟返回内容。
-
-### 请求参数
-
-|名称|位置|类型|必选|说明|
-|---|---|---|---|---|
-|content|query|string| 是 |需要通过 Response 返回的内容。|
-|content-type|query|string| 否 |指定通过 Response 返回内容的 Content-Type。|
-|filename|query|string| 否 |指定通过 Response 返回的内容的文件名。|
-
-#### 详细说明
-
-**content-type**: 指定通过 Response 返回内容的 Content-Type。
-如不指定，默认值为 application/octet-stream。
-如指定为 auto，则自动检测数据测 Content-Type。
-
-> 返回示例
-
-> 200 Response
-
-```json
-{}
-```
-
-### 返回结果
-
-|状态码|状态码含义|说明|数据模型|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
-
-### 返回数据结构
+### Responses Data Schema
 
 ## GET 指定 Response Header（GET 传参）
 
@@ -577,24 +603,24 @@ curl -i "${base_url}/response-headers?key1=value1&key2=value2"
 GET {{base_url}}/response-headers?key1=value1&key2=value2
 ```
 
-### 请求参数
+### Params
 
-|名称|位置|类型|必选|说明|
+|Name|Location|Type|Required|Description|
 |---|---|---|---|---|
-|key1|query|string| 否 |none|
-|key2|query|string| 否 |none|
+|key1|query|string| no |none|
+|key2|query|string| no |none|
 
-> 返回示例
+> Response Examples
 
 > 成功
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
 
 ## POST 指定 Response Header（POST 传参）
 
@@ -621,7 +647,7 @@ Content-Type: application/x-www-form-urlencoded
 key1=value1&key2=value2
 ```
 
-> Body 请求参数
+> Body Parameters
 
 ```yaml
 key1: value1
@@ -629,25 +655,85 @@ key2: value2
 
 ```
 
-### 请求参数
+### Params
 
-|名称|位置|类型|必选|说明|
+|Name|Location|Type|Required|Description|
 |---|---|---|---|---|
-|body|body|object| 否 |none|
-|» key1|body|string| 否 |none|
-|» key2|body|string| 否 |none|
+|body|body|object| no |none|
+|» key1|body|string| no |none|
+|» key2|body|string| no |none|
 
-> 返回示例
+> Response Examples
 
 > 成功
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
+
+## POST 模拟返回数据
+
+POST /data
+
+根据配置，模拟返回数据。
+
+- cURL 示例
+
+```bash
+curl "${base_url}" \
+     -F 'content_file=@content_file.txt' \
+     -F 'content=content-abc' \
+     -F 'as_download=1' \
+     -F 'content_type=text/plain' \
+     -F 'download_filename=filename.txt'
+```
+
+> Body Parameters
+
+```yaml
+content_file: string
+content: Test text.
+as_download: 1,true
+download_filename: 我的文件.txt
+content_type: application/octet-stream
+
+```
+
+### Params
+
+|Name|Location|Type|Required|Description|
+|---|---|---|---|---|
+|body|body|object| no |none|
+|» content_file|body|string(binary)| no |使用这里上传文件的内容作为返回。|
+|» content|body|string| no |需要通过 Response 返回的内容。|
+|» as_download|body|integer| no |返回的内容以下载形式提供。|
+|» download_filename|body|string| no |指定下载时使用的文件名。|
+|» content_type|body|string| no |指定通过 Response 返回内容的 Content-Type。|
+
+#### Description
+
+**» content_type**: 指定通过 Response 返回内容的 Content-Type。
+如不指定或指定为 auto，则自动检测数据测 Content-Type。
+
+> Response Examples
+
+> 200 Response
+
+```json
+{}
+```
+
+### Responses
+
+|HTTP Status Code |Meaning|Description|Data schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
+
+### Responses Data Schema
 
 # 状态码
 
@@ -673,23 +759,23 @@ curl -iL "${base_url}/status/302"
 GET {{base_url}}/status/302
 ```
 
-### 请求参数
+### Params
 
-|名称|位置|类型|必选|说明|
+|Name|Location|Type|Required|Description|
 |---|---|---|---|---|
-|code|path|integer| 是 |指定要返回的状态码|
+|code|path|integer| yes |指定要返回的状态码|
 
-> 返回示例
+> Response Examples
 
 > 200 Response
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
 
 # 数据探测
 
@@ -722,21 +808,21 @@ Content-Type: application/octet-stream
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 ```
 
-> Body 请求参数
+> Body Parameters
 
 ```yaml
 file: string
 
 ```
 
-### 请求参数
+### Params
 
-|名称|位置|类型|必选|说明|
+|Name|Location|Type|Required|Description|
 |---|---|---|---|---|
-|body|body|object| 否 |none|
-|» file|body|string(binary)| 是 |包含数据的文件|
+|body|body|object| no |none|
+|» file|body|string(binary)| yes |包含数据的文件|
 
-> 返回示例
+> Response Examples
 
 > 成功
 
@@ -748,17 +834,17 @@ file: string
 }
 ```
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
 
-状态码 **200**
+HTTP Status Code **200**
 
-|名称|类型|必选|约束|中文名|说明|
+|Name|Type|Required|Restrictions|Title|description|
 |---|---|---|---|---|---|
 |» size|integer|true|none||none|
 |» Content-Type|string|true|none||none|
@@ -787,21 +873,21 @@ Content-Type: application/x-www-form-urlencoded
 < data_file
 ```
 
-> Body 请求参数
+> Body Parameters
 
 ```yaml
 string
 
 ```
 
-### 请求参数
+### Params
 
-|名称|位置|类型|必选|说明|
+|Name|Location|Type|Required|Description|
 |---|---|---|---|---|
-|Content-Type|header|string| 否 |none|
-|body|body|string(binary)| 否 |none|
+|Content-Type|header|string| no |none|
+|body|body|string(binary)| no |none|
 
-> 返回示例
+> Response Examples
 
 > 成功
 
@@ -813,109 +899,109 @@ string
 }
 ```
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
 
-状态码 **200**
+HTTP Status Code **200**
 
-|名称|类型|必选|约束|中文名|说明|
+|Name|Type|Required|Restrictions|Title|description|
 |---|---|---|---|---|---|
 |» size|integer|true|none||none|
 |» Content-Type|string|true|none||none|
 |» content|string|true|none||none|
 
-# 数据格式
+# 获得指定数据格式的内容
 
 ## GET 返回 JPEG 图像
 
 GET /image/jpeg
 
-> 返回示例
+> Response Examples
 
 > 200 Response
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
 
 ## GET 返回 PNG 图像
 
 GET /image/png
 
-> 返回示例
+> Response Examples
 
 > 200 Response
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
 
 ## GET 返回 SVG 图像
 
 GET /image/svg
 
-> 返回示例
+> Response Examples
 
 > 200 Response
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
 
 ## GET 返回 WebP 图像
 
 GET /image/webp
 
-> 返回示例
+> Response Examples
 
 > 200 Response
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
 
 ## GET 返回 GIF 图像
 
 GET /image/gif
 
-> 返回示例
+> Response Examples
 
 > 200 Response
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
 
 ## GET 返回 JSON 数据
 
 GET /image/json
 
-> 返回示例
+> Response Examples
 
 > 200 Response
 
@@ -923,19 +1009,19 @@ GET /image/json
 {}
 ```
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
 
 ## GET 返回 XML 数据
 
 GET /image/xml
 
-> 返回示例
+> Response Examples
 
 > 200 Response
 
@@ -943,63 +1029,63 @@ GET /image/xml
 <?xml version="1.0" encoding="UTF-8" ?>
 ```
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
 
 ## GET 返回 HTML 数据
 
 GET /image/html
 
-> 返回示例
+> Response Examples
 
 > 200 Response
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
 
 ## GET 返回编码为 UTF-8 的内容
 
 GET /encoding/utf8
 
-> 返回示例
+> Response Examples
 
 > 200 Response
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
 
 ## GET 返回 Gzip 数据
 
 GET /image/gzip
 
-> 返回示例
+> Response Examples
 
 > 200 Response
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
 
-# Data Dump
+# 数据倾卸
 
 ## GET 显示请求的原始信息
 
@@ -1007,17 +1093,17 @@ GET /dump/request
 
 将请求的原始信息作为 Response 的 Body 返回。
 
-> 返回示例
+> Response Examples
 
 > 200 Response
 
-### 返回结果
+### Responses
 
-|状态码|状态码含义|说明|数据模型|
+|HTTP Status Code |Meaning|Description|Data schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
 
-### 返回数据结构
+### Responses Data Schema
 
-# 数据模型
+# Data Schema
 

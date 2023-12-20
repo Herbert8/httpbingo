@@ -125,19 +125,19 @@
     <br>
     <label for="download_switch">作为文件下载：
         <span class="switch">
-            <input type="checkbox" id="download_switch" name="downloadSwitch">
+            <input type="checkbox" id="download_switch" name="as_download">
             <span class="slider"></span>
         </span>
     </label>
     <br>
 
     <label for="content_file">上传要下载的文件内容：</label>
-    <input type="file" id="content_file" name="contentFile">
+    <input type="file" id="content_file" name="content_file">
     <br>
     <br>
 
     <label for="download_filename">指定下载时的文件名：</label>
-    <input type="text" id="download_filename" name="downloadFilename">
+    <input type="text" id="download_filename" name="download_filename">
 
     <br>
     <br>
@@ -149,7 +149,7 @@
     <br>
 
     <label for="content_type_edit">指定下载内容的 Content-Type：</label>
-    <input id="content_type_edit" name="contentType" type="text" list="contentTypes" placeholder="选择或输入（留空或者设置为 auto 启用自动类型检测）...">
+    <input id="content_type_edit" name="content_type" type="text" list="contentTypes" placeholder="选择或输入（留空或者设置为 auto 启用自动类型检测）...">
     <datalist id="contentTypes">
         <option value="auto" label="自动检测">
         <option value="unknown" label="未知类型，默认使用 application/octet-stream">

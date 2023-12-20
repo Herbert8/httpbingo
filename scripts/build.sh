@@ -30,8 +30,12 @@ do_build () {
     echo "[ OS: $os  Architecture: $arch ]"
     echo "${cmd_line[@]}"
     "${cmd_line[@]}"
+    OUTPUT_FILE_ARRAY+=("$output_file")
 }
 
+upx_compress () {
+    upx "${OUTPUT_FILE_ARRAY[@]}"
+}
 
 # $1 应用名称
 # $2 模块路径
@@ -42,10 +46,12 @@ main () {
     source "$BASE_DIR/supported_platforms.sh"
 
     shift 2
+    OUTPUT_FILE_ARRAY=()
     for platform in "${SUPPORTED_PLATFORMS_LIST[@]}"; do
         parse_platform "$platform"
         do_build "$@"
     done
+#    upx_compress
 }
 
 main "$@"
