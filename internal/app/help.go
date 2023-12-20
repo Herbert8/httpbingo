@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-//go:embed doc/plain/usage.txt
+//go:embed resource/doc/plain/usage.txt
 var sConsoleHelp string
 
 func ShowSummary() {

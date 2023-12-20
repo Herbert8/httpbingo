@@ -1,6 +1,8 @@
 package service
 
 import (
+	"bytes"
+	"compress/gzip"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -8,6 +10,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -32,17 +35,15 @@ func values2Map(values url.Values) VariableMap {
 	return ret
 }
 
-func parsePathParams(fullPathStr string, basePath string) []string {
-	paramPathStr := strings.Replace(fullPathStr, basePath, "", 1)
-	originalParamArr := strings.Split(paramPathStr, "/")
-
-	var retParamArr []string
-	for _, param := range originalParamArr {
-		if param != "" {
-			retParamArr = append(retParamArr, param)
-		}
+func parsePathParams(fullPathStr string, basePathComponentCount int) []string {
+	basePathComponentCountWithRootPath := basePathComponentCount + 1
+	// 拆分路径
+	originalParamArr := strings.Split(fullPathStr, "/")
+	if basePathComponentCountWithRootPath > len(originalParamArr)-1 {
+		return nil
 	}
-	return retParamArr
+
+	return originalParamArr[basePathComponentCountWithRootPath:]
 }
 
 func writeAccessControl(responseWriter http.ResponseWriter) {
@@ -73,6 +74,10 @@ func writeJSONResponse(data interface{}, responseWriter http.ResponseWriter) {
 
 type HTTPRequestHandler func(http.ResponseWriter, *http.Request)
 
+func handleWrapperFunc(pattern string, handler HTTPRequestHandler) {
+	http.HandleFunc(pattern, ProcessorWrapper(handler))
+}
+
 func ProcessorWrapper(processor HTTPRequestHandler) HTTPRequestHandler {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		writeAccessControl(writer)
@@ -97,4 +102,34 @@ func ObtainIPs() []string {
 		}
 	}
 	return retIPs
+}
+
+func writeByteSliceToResponseWithContentType(responseWriter http.ResponseWriter, data []byte, contentType string) (int, error) {
+	responseWriter.Header().Set("Content-Type", contentType)
+	responseWriter.Header().Set("Content-Length", strconv.Itoa(len(data)))
+	return responseWriter.Write(data)
+}
+
+func writeByteSliceToResponse(responseWriter http.ResponseWriter, data []byte) (int, error) {
+	sContentType := http.DetectContentType(data)
+	return writeByteSliceToResponseWithContentType(responseWriter, data, sContentType)
+}
+
+func GzipCompress(input []byte) ([]byte, error) {
+	var compressedData bytes.Buffer
+
+	// 创建一个 Gzip Writer，将数据写入其中
+	writer := gzip.NewWriter(&compressedData)
+	_, err := writer.Write(input)
+	if err != nil {
+		return nil, err
+	}
+
+	// 关闭 Gzip Writer，确保所有数据都被写入
+	err = writer.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	return compressedData.Bytes(), nil
 }

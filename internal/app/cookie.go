@@ -40,7 +40,7 @@ func ProcSetCookieDetail(w http.ResponseWriter, r *http.Request) {
 		maxAge = 0
 	}
 
-	pathParams := parsePathParams(r.URL.Path, "/cookies/set-detail/")
+	pathParams := parsePathParams(r.URL.Path, 2)
 
 	if len(pathParams) == 2 {
 		cookie := http.Cookie{

@@ -9,7 +9,7 @@ import (
 	"net/url"
 )
 
-var ServicePort int
+var ListenPort int
 
 type FileInfo struct {
 	FileName   string      `json:"filename"`
@@ -68,7 +68,7 @@ func fileHeaderMap2FileInfoMap(fileHeaderMap map[string][]*multipart.FileHeader)
 	return retFileInfoMap
 }
 
-func ProcAnything(w http.ResponseWriter, r *http.Request) {
+func ProcAnythingInfo(r *http.Request) RequestInfo {
 
 	// 创建收集 请求 信息的对象
 	requestInfo := RequestInfo{}
@@ -106,8 +106,9 @@ func ProcAnything(w http.ResponseWriter, r *http.Request) {
 
 	// 如果 Body 是 JSON，则解析
 	jsonMap := make(VariableMap)
-	_ = json.Unmarshal(bodyDataBytes, &jsonMap)
-	requestInfo.JSON = jsonMap
+	if json.Unmarshal(bodyDataBytes, &jsonMap) == nil {
+		requestInfo.JSON = jsonMap
+	}
 
 	// URL
 	sUrl, urlErr := url.QueryUnescape(r.RequestURI)
@@ -120,13 +121,18 @@ func ProcAnything(w http.ResponseWriter, r *http.Request) {
 
 	ipArr := ObtainIPs()
 	for idx, val := range ipArr {
-		ipArr[idx] = fmt.Sprintf("%s:%d", val, ServicePort)
+		ipArr[idx] = fmt.Sprintf("%s:%d", val, ListenPort)
 	}
 	requestInfo.ServerEndpoints = ipArr
 
+	return requestInfo
+}
+
+func ProcAnything(w http.ResponseWriter, r *http.Request) {
+	retRequestInfo := ProcAnythingInfo(r)
 	//r.RequestURI
 	// 指定 Response 的 Content-Type
 	w.Header().Set("Content-Type", "application/json")
 
-	writeJSONResponse(requestInfo, w)
+	writeJSONResponse(retRequestInfo, w)
 }

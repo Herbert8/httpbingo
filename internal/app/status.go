@@ -1,13 +1,14 @@
 package service
 
 import (
+	"httpbingo/internal/httputils"
 	"net/http"
 	"strconv"
 )
 
 func ProcStatus(respWriter http.ResponseWriter, req *http.Request) {
 
-	pathParams := parsePathParams(req.URL.Path, "/status/")
+	pathParams := parsePathParams(req.URL.Path, 1)
 
 	// 从 URL 中解析出用于测试的 用户名、口令
 	sStatusCode := ""
@@ -16,8 +17,12 @@ func ProcStatus(respWriter http.ResponseWriter, req *http.Request) {
 	}
 	nStatusCode, err := strconv.Atoi(sStatusCode)
 	if err != nil {
-		nStatusCode = http.StatusOK
+		nStatusCode = http.StatusBadRequest
+		httputils.Error(respWriter, "Invalid status code", nStatusCode)
+		return
 	}
-	http.Error(respWriter, http.StatusText(nStatusCode), nStatusCode)
-	//respWriter.WriteHeader(nStatusCode)
+	if nStatusCode >= 300 && nStatusCode <= 399 {
+		respWriter.Header().Set("Location", "/anything")
+	}
+	httputils.ErrorWithDefaultStatusText(respWriter, nStatusCode)
 }

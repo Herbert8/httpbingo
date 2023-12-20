@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>定制返回内容</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            margin-left: 8px;
+            /* Adjust the margin as needed */
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #4caf50;
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked+.slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+        input[type="text"],
+        input[type="file"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+<form action="/data" method="post" enctype="multipart/form-data">
+    <h2>配置返回数据的规则</h2>
+
+    <br>
+    <label for="download_switch">作为文件下载：
+        <span class="switch">
+            <input type="checkbox" id="download_switch" name="as_download">
+            <span class="slider"></span>
+        </span>
+    </label>
+    <br>
+
+    <label for="content_file">上传要下载的文件内容：</label>
+    <input type="file" id="content_file" name="content_file">
+    <br>
+    <br>
+
+    <label for="download_filename">指定下载时的文件名：</label>
+    <input type="text" id="download_filename" name="download_filename">
+
+    <br>
+    <br>
+
+    <label for="content">指定要下载的内容：</label>
+    <textarea id="content" name="content" rows="4"></textarea>
+
+    <br>
+    <br>
+
+    <label for="content_type_edit">指定下载内容的 Content-Type：</label>
+    <input id="content_type_edit" name="content_type" type="text" list="contentTypes" placeholder="选择或输入（留空或者设置为 auto 启用自动类型检测）...">
+    <datalist id="contentTypes">
+        <option value="auto" label="自动检测">
+        <option value="unknown" label="未知类型，默认使用 application/octet-stream">
+        <option value="text/html" label="HTML 文档">
+        <option value="text/css" label="CSS 样式表">
+        <option value="text/xml" label="XML 文档">
+        <option value="image/gif" label="GIF 图片">
+        <option value="image/jpeg" label="JPEG 图片">
+        <option value="application/javascript" label="JavaScript 脚本">
+        <option value="application/atom+xml" label="Atom XML 源">
+        <option value="application/rss+xml" label="RSS XML 源">
+        <option value="text/mathml" label="MathML 文档">
+        <option value="text/plain" label="普通文本">
+        <option value="text/vnd.sun.j2me.app-descriptor" label="J2ME 应用描述">
+        <option value="text/vnd.wap.wml" label="WML 文档">
+        <option value="text/x-component" label="HTML 组件">
+        <option value="image/avif" label="AVIF 图片">
+        <option value="image/png" label="PNG 图片">
+        <option value="image/svg+xml" label="SVG 图片">
+        <option value="image/tiff" label="TIFF 图片">
+        <option value="image/vnd.wap.wbmp" label="WBMP 图片">
+        <option value="image/webp" label="WebP 图片">
+        <option value="image/x-icon" label="ICO 图标">
+        <option value="image/x-jng" label="JNG 图片">
+        <option value="image/x-ms-bmp" label="BMP 图片">
+        <option value="font/woff" label="WOFF 字体">
+        <option value="font/woff2" label="WOFF2 字体">
+        <option value="application/java-archive" label="Java 存档">
+        <option value="application/json" label="JSON 数据">
+        <option value="application/mac-binhex40" label="Macintosh BinHex 4.0 存档">
+        <option value="application/msword" label="Microsoft Word 文档">
+        <option value="application/pdf" label="Adobe PDF 文档">
+        <option value="application/postscript" label="PostScript 文档">
+        <option value="application/rtf" label="Rich Text Format 文档">
+        <option value="application/vnd.apple.mpegurl" label="Apple HLS 播放列表">
+        <option value="application/vnd.google-earth.kml+xml" label="Google Earth KML 文件">
+        <option value="application/vnd.google-earth.kmz" label="Google Earth KMZ 存档">
+        <option value="application/vnd.ms-excel" label="Microsoft Excel 表格">
+        <option value="application/vnd.ms-fontobject" label="MS 字体对象">
+        <option value="application/vnd.ms-powerpoint" label="Microsoft PowerPoint 演示文稿">
+        <option value="application/vnd.oasis.opendocument.graphics" label="ODF 图形文档">
+        <option value="application/vnd.oasis.opendocument.presentation" label="ODF 演示文稿">
+        <option value="application/vnd.oasis.opendocument.spreadsheet" label="ODF 电子表格">
+        <option value="application/vnd.oasis.opendocument.text" label="ODF 文本文档">
+        <option value="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                label="PowerPoint 2007+ 演示文稿">
+        <option value="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" label="Excel 2007+ 电子表格">
+        <option value="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                label="Word 2007+ 文档">
+        <option value="application/vnd.wap.wmlc" label="编译后的 WML 文档">
+        <option value="application/wasm" label="WebAssembly 二进制模块">
+        <option value="application/x-7z-compressed" label="7-Zip 存档">
+        <option value="application/x-cocoa" label="Cocoa 应用">
+        <option value="application/x-java-archive-diff" label="Java 存档差异">
+        <option value="application/x-java-jnlp-file" label="Java Web 启动文件">
+        <option value="application/x-makeself" label="自包含的可执行脚本">
+        <option value="application/x-perl" label="Perl 脚本">
+        <option value="application/x-pilot" label="PalmPilot 数据">
+        <option value="application/x-rar-compressed" label="RAR 存档">
+        <option value="application/x-redhat-package-manager" label="Red Hat 软件包管理器包">
+        <option value="application/x-sea" label="SEA 存档">
+        <option value="application/x-shockwave-flash" label="Adobe Flash 动画">
+        <option value="application/x-stuffit" label="StuffIt 存档">
+        <option value="application/x-tcl" label="Tcl 脚本">
+        <option value="application/x-x509-ca-cert" label="X.509 证书">
+        <option value="application/x-xpinstall" label="Mozilla 安装脚本">
+        <option value="application/xhtml+xml" label="XHTML 文档">
+        <option value="application/xspf+xml" label="XSPF 播放列表">
+        <option value="application/zip" label="ZIP 存档">
+        <option value="application/octet-stream" label="二进制数据流">
+        <option value="audio/midi" label="MIDI 音频">
+        <option value="audio/mpeg" label="MP3 音频">
+        <option value="audio/ogg" label="Ogg 音频">
+        <option value="audio/x-m4a" label="M4A 音频">
+        <option value="audio/x-realaudio" label="RealAudio 音频">
+        <option value="video/3gpp" label="3GPP 视频">
+        <option value="video/mp2t" label="MPEG-2 传输流">
+        <option value="video/mp4" label="MP4 视频">
+        <option value="video/mpeg" label="MPEG 视频">
+        <option value="video/quicktime" label="QuickTime 视频">
+        <option value="video/webm" label="WebM 视频">
+        <option value="video/x-flv" label="FLV 视频">
+        <option value="video/x-m4v" label="M4V 视频">
+        <option value="video/x-mng" label="MNG 视频">
+        <option value="video/x-ms-asf" label="Microsoft ASF 视频">
+        <option value="video/x-ms-wmv" label="Windows Media Video">
+        <option value="video/x-msvideo" label="AVI 视频">
+    </datalist>
+
+    <br>
+    <br>
+    <input type="submit" value="提交">
+</form>
+</body>
+
+</html>
