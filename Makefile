@@ -9,8 +9,8 @@ convert_json_yaml:
 	yq eval -P < api/openapi-spec/HTTPBinGo.openapi.json > api/openapi-spec/HTTPBinGo.openapi.yaml
 
 gen_redoc: convert_json_yaml
-#	npx @redocly/cli build-docs api/openapi-spec/HTTPBinGo.openapi.yaml -o cmd/httpbingo/doc/html/redoc.html
-	redocly build-docs api/openapi-spec/HTTPBinGo.openapi.yaml -o cmd/httpbingo/doc/html/redoc.html
+	npx @redocly/cli build-docs api/openapi-spec/HTTPBinGo.openapi.yaml -o cmd/httpbingo/doc/html/redoc.html
+#	redocly build-docs api/openapi-spec/HTTPBinGo.openapi.yaml -o cmd/httpbingo/doc/html/redoc.html
 #	open -R cmd/httpbingo/doc/html/redoc.html
 
 gen_swagger:
