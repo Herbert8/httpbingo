@@ -21,18 +21,13 @@ func basicAuthProcessor(respWriter http.ResponseWriter, req *http.Request, hidde
 		User          string `json:"user"`
 	}
 
-	const statusNotFoundBody = `<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
-<title>404 Not Found</title>
-<h1>Not Found</h1>
-<p>The requested URL was not found on the server.  If you entered the URL manually please check your spelling and try again.</p>`
-
 	pathParams := parsePathParams(req.URL.Path, 1)
 
 	// 从 URL 中解析出用于测试的 用户名、口令
 	// 如果 长度不为 2，则不是 /basic-auth/username/password 模式
 	// 返回 404
 	if len(pathParams) != 2 {
-		httputils.Error(respWriter, statusNotFoundBody, http.StatusNotFound)
+		httputils.ErrorNotFound(respWriter)
 		return
 	}
 	authUsername := pathParams[0]
