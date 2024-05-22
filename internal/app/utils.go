@@ -5,7 +5,6 @@ import (
 	"compress/gzip"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net"
 	"net/http"
 	"net/url"
@@ -67,7 +66,7 @@ func writeJSONResponse(data interface{}, responseWriter http.ResponseWriter) {
 	jsonStrRet := string(jsonBytesRet)
 	jsonStrRet = strings.ReplaceAll(jsonStrRet, "\\u0026", "&")
 
-	log.Printf("=============================================\n%s\n\n", jsonStrRet)
+	//log.Printf("=============================================\n%s\n\n", jsonStrRet)
 
 	_, _ = fmt.Fprint(responseWriter, jsonStrRet)
 }
