@@ -1,0 +1,1888 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "HTTPBinGo",
+    "description": "本程序是 [Kenneth Reitz](https://github.com/kennethreitz) 编写的 [HTTPBin](https://httpbin.org/) 的 Golang 实现。\n\n[HTTPBin](https://httpbin.org/) 是一个 `HTTP Request & Response Service`，通过 Response 返回 Request 的信息，也可以根据请求指定的参数来返回需要的 HTTP Response，以便 HTTP 客户端可以方便地看到发送请求的信息，也可以用于模拟特定的服务端返回，以便做针对性的处理。\n\n\n\n### 使用方法\n\n| 参数 | 说明                     |\n| :--: | ------------------------ |\n| `-h` | 在控制台显示基础帮助信息 |\n| `-p` | 指定监听端口             |\n",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "认证"
+    },
+    {
+      "name": "操作 Cookie"
+    },
+    {
+      "name": "获取任意请求的信息"
+    },
+    {
+      "name": "重定向"
+    },
+    {
+      "name": "动态数据"
+    },
+    {
+      "name": "状态码"
+    },
+    {
+      "name": "数据探测"
+    },
+    {
+      "name": "数据倾卸"
+    },
+    {
+      "name": "图像"
+    },
+    {
+      "name": "文本及编码"
+    },
+    {
+      "name": "文件格式"
+    }
+  ],
+  "paths": {
+    "/anything": {
+      "get": {
+        "summary": "获取请求的所有信息",
+        "x-apifox-folder": "获取任意请求的信息",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "获取请求的详细信息。\n\n\n\n- cURL 示例\n```bash\ncurl -i \"${base_url}/anything\"\n```\n\n- HTTP 示例\n```http\nGET {{base_url}}/anything\n```\n",
+        "tags": [
+          "获取任意请求的信息"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "args": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apifox-orders": [],
+                      "x-apifox-ignore-properties": []
+                    },
+                    "data": {
+                      "type": "string"
+                    },
+                    "files": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apifox-orders": [],
+                      "x-apifox-ignore-properties": []
+                    },
+                    "form": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apifox-orders": [],
+                      "x-apifox-ignore-properties": []
+                    },
+                    "headers": {
+                      "type": "object",
+                      "properties": {
+                        "Accept": {
+                          "type": "string"
+                        },
+                        "Host": {
+                          "type": "string"
+                        },
+                        "User-Agent": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Accept",
+                        "Host",
+                        "User-Agent"
+                      ],
+                      "x-apifox-orders": [
+                        "Accept",
+                        "Host",
+                        "User-Agent"
+                      ],
+                      "x-apifox-ignore-properties": []
+                    },
+                    "json": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apifox-orders": [],
+                      "x-apifox-ignore-properties": []
+                    },
+                    "method": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "server_endpoints": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "client": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "args",
+                    "data",
+                    "files",
+                    "form",
+                    "headers",
+                    "json",
+                    "method",
+                    "url",
+                    "server_endpoints",
+                    "client"
+                  ],
+                  "x-apifox-orders": [
+                    "args",
+                    "data",
+                    "files",
+                    "form",
+                    "headers",
+                    "json",
+                    "method",
+                    "url",
+                    "server_endpoints",
+                    "client"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "args": {},
+                      "data": "",
+                      "files": {},
+                      "form": {},
+                      "headers": {
+                        "Accept": "*/*",
+                        "Host": "localhost:8080",
+                        "User-Agent": "curl/8.1.2"
+                      },
+                      "json": {},
+                      "method": "GET",
+                      "url": "/anything",
+                      "server_endpoints": [
+                        "192.168.50.100:8080",
+                        "192.168.1.200:8080",
+                        "192.168.1.7:8080",
+                        "192.168.101.1:8080"
+                      ],
+                      "client": "127.0.0.1:54146"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-126134419-run",
+        "security": []
+      }
+    },
+    "/cookies": {
+      "get": {
+        "summary": "显示客户端 Cookie",
+        "x-apifox-folder": "操作 Cookie",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "显示客户端请求携带的 Cookie 信息。\n\n\n- cURL 示例\n```bash\ncurl -iL -c \"cookie.txt\" \\\n  \"${base_url}/cookies\"\n```\n\n- HTTP 示例\n```http\nGET {{base_url}}/cookies\n```",
+        "tags": [
+          "操作 Cookie"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cookies": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "Name": {
+                            "type": "string"
+                          },
+                          "Value": {
+                            "type": "string"
+                          },
+                          "Path": {
+                            "type": "string"
+                          },
+                          "Domain": {
+                            "type": "string"
+                          },
+                          "Expires": {
+                            "type": "string"
+                          },
+                          "RawExpires": {
+                            "type": "string"
+                          },
+                          "MaxAge": {
+                            "type": "integer"
+                          },
+                          "Secure": {
+                            "type": "boolean"
+                          },
+                          "HttpOnly": {
+                            "type": "boolean"
+                          },
+                          "SameSite": {
+                            "type": "integer"
+                          },
+                          "Raw": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "Name",
+                          "Value",
+                          "Path",
+                          "Domain",
+                          "Expires",
+                          "RawExpires",
+                          "MaxAge",
+                          "Secure",
+                          "HttpOnly",
+                          "SameSite",
+                          "Raw"
+                        ],
+                        "x-apifox-orders": [
+                          "Name",
+                          "Value",
+                          "Path",
+                          "Domain",
+                          "Expires",
+                          "RawExpires",
+                          "MaxAge",
+                          "Secure",
+                          "HttpOnly",
+                          "SameSite",
+                          "Raw"
+                        ],
+                        "x-apifox-ignore-properties": []
+                      }
+                    }
+                  },
+                  "required": [
+                    "cookies"
+                  ],
+                  "x-apifox-orders": [
+                    "cookies"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "cookies": [
+                        {
+                          "Name": "key1",
+                          "Value": "value1",
+                          "Path": "",
+                          "Domain": "",
+                          "Expires": "0001-01-01T00:00:00Z",
+                          "RawExpires": "",
+                          "MaxAge": 0,
+                          "Secure": false,
+                          "HttpOnly": false,
+                          "SameSite": 0,
+                          "Raw": ""
+                        },
+                        {
+                          "Name": "key2",
+                          "Value": "value2",
+                          "Path": "",
+                          "Domain": "",
+                          "Expires": "0001-01-01T00:00:00Z",
+                          "RawExpires": "",
+                          "MaxAge": 0,
+                          "Secure": false,
+                          "HttpOnly": false,
+                          "SameSite": 0,
+                          "Raw": ""
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132059657-run",
+        "security": []
+      }
+    },
+    "/cookies/set": {
+      "get": {
+        "summary": "为客户端设置 Cookie",
+        "x-apifox-folder": "操作 Cookie",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "通过 Params 参数指定要在 Response 中返回的 Cookie。\n\n其中每个**键值对**表示一个 Cookie 设置。\n\n服务器返回 Status Code 为 302 的 Response，通过 Set-Cookie 头来为客户端设定 Cookie，同时引导 HTTP Client 访问 /cookies 查看本地 Cookie。\n\n\n- cURL 示例\n```bash\ncurl -iL -c \"cookie.txt\" \\\n  \"${base_url}/cookies/set?key1=value1&key2=value2\"\n```\n\n- HTTP 示例\n```http\nGET {{base_url}}/cookies/set?key1=value1&key2=value2\n```\n",
+        "tags": [
+          "操作 Cookie"
+        ],
+        "parameters": [
+          {
+            "name": "key1",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "value1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "key2",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "value2",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": "HTTP/1.1 302 Found\nAccess-Control-Allow-Credentials: true\nAccess-Control-Allow-Origin: *\nLocation: /cookies\nSet-Cookie: key1=value1; Path=/\nSet-Cookie: key2=value2; Path=/\nDate: Sun, 10 Dec 2023 05:22:12 GMT\nContent-Length: 0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132060409-run",
+        "security": []
+      }
+    },
+    "/cookies/set-detail/{key}/{value}": {
+      "get": {
+        "summary": "设置 Cookie 的详细信息",
+        "x-apifox-folder": "操作 Cookie",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "通过 Params 参数指定要在 Response 中返回的 Cookie。\n\n通过 `path` 中的 `key` 和 `value` 指定创建 Cookie 的 `key` 和 `value`，其它参数通过 Query Params 传递。\n\n服务器返回 Status Code 为 302 的 Response，通过 Set-Cookie 头来为客户端设定 Cookie，同时引导 HTTP Client 访问 /cookies 查看本地 Cookie。\n\n\n- cURL 示例\n```bash\ncurl -iL -c \"cookie.txt\" \\\n  \"${base_url}/cookies/set-detail/key/value?secure=1&httponly=1\"\n```\n\n- HTTP 示例\n```http\nGET {{base_url}}/cookies/set-detail/key/value?secure=1&httponly=1\n```\n",
+        "tags": [
+          "操作 Cookie"
+        ],
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "指定要设置的 Cookie 的 Key。",
+            "required": true,
+            "example": "key1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "value",
+            "in": "path",
+            "description": "指定要设置的 Cookie 的 Value。",
+            "required": true,
+            "example": "value1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "secure",
+            "in": "query",
+            "description": "指定 Cookie 的安全性，值为 1 时，Cookie 只有在使用 HTTPS 的时候才能携带到服务端。",
+            "required": false,
+            "example": "0,1",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "httponly",
+            "in": "query",
+            "description": "指定 Cookie 必须由 HTTP 的 Response 指定，无法通过脚本等手段设置。",
+            "required": false,
+            "example": "0,1",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": "HTTP/1.1 302 Found\nAccess-Control-Allow-Credentials: true\nAccess-Control-Allow-Origin: *\nLocation: /cookies\nSet-Cookie: key1=value1; Path=/; HttpOnly; Secure\nDate: Sun, 10 Dec 2023 05:28:36 GMT\nContent-Length: 0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132060939-run",
+        "security": []
+      }
+    },
+    "/cookies/delete": {
+      "get": {
+        "summary": "删除客户端 Cookie",
+        "x-apifox-folder": "操作 Cookie",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "通过 Params 参数指定要在 Response 中进行清理的 Cookie。\n\n其中每个**键值对**中的 Key 表示一个要清理的 Cookie。\n\n\n\n\n- cURL 示例\n```bash\ncurl -iL  \"${base_url}/cookies/delete?key1&key2\"\n```\n\n- HTTP 示例\n```http\nGET {{base_url}}/cookies/delete?key1&key2\n```\n",
+        "tags": [
+          "操作 Cookie"
+        ],
+        "parameters": [
+          {
+            "name": "key1",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "key2",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": "HTTP/1.1 302 Found\nAccess-Control-Allow-Credentials: true\nAccess-Control-Allow-Origin: *\nLocation: /cookies\nSet-Cookie: key2=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT\nSet-Cookie: key1=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT\nDate: Sun, 10 Dec 2023 05:35:26 GMT\nContent-Length: 0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132070732-run",
+        "security": []
+      }
+    },
+    "/redirect-to": {
+      "get": {
+        "summary": "重定向",
+        "x-apifox-folder": "重定向",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "指定服务端模拟 30X Redirect。\n\n- cURL 示例\n```bash\ncurl -iL \"${base_url}/redirect-to?url=${base_url}/anything&status_code=302\"\n```\n\n- HTTP 示例\n```http\nGET {{base_url}}/redirect-to?url={{base_url}}/anything&status_code=302\n```",
+        "tags": [
+          "重定向"
+        ],
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "description": "跳转到的 URL。",
+            "required": false,
+            "example": "http://baidu.com",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status_code",
+            "in": "query",
+            "description": "状态码。",
+            "required": false,
+            "example": "302",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132079039-run",
+        "security": []
+      }
+    },
+    "/basic-auth/{user}/{passwd}": {
+      "get": {
+        "summary": "Basic Auth 认证",
+        "x-apifox-folder": "认证",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "[Basic Auth](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Authentication) 身份认证测试。\n\n通过 Path 中的 `username` 和 `password` 参数指定服务端按这两个参数进行权限校验。如果没有校验通过，则返回 401。\n\n对于浏览器访问的场景，会弹出输入用户名和密码的输入框。\n\n\n\n- cURL 示例\n\n```bash\ncurl \"${base_url}/basic-auth/my-username/my-password\" -i -u 'my-username:my-password'\n```\n\n\n\n- HTTP 示例\n\n```http\nGET {{base_url}}/basic-auth/my-username/my-password\n```\n\n\n\n",
+        "tags": [
+          "认证"
+        ],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "path",
+            "description": "用户名",
+            "required": true,
+            "example": "my_user_name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "passwd",
+            "in": "path",
+            "description": "密码",
+            "required": true,
+            "example": "my_password",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "authenticated": {
+                      "type": "boolean"
+                    },
+                    "user": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "authenticated",
+                    "user"
+                  ],
+                  "x-apifox-orders": [
+                    "authenticated",
+                    "user"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "authenticated": true,
+                      "user": "my_user_name"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "没有权限",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "异常示例",
+                    "value": "HTTP/1.1 401 Unauthorized\nAccess-Control-Allow-Credentials: true\nAccess-Control-Allow-Origin: *\nWww-Authenticate: Basic realm=\"Fake Realm\"\nDate: Sun, 10 Dec 2023 07:45:35 GMT\nContent-Length: 0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132080449-run",
+        "security": []
+      }
+    },
+    "/delay/{delay}": {
+      "get": {
+        "summary": "按指定时长模拟延时返回",
+        "x-apifox-folder": "动态数据",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "让服务器在等待指定时间后返回，如不指定，默认值为 3 秒，最大值为 10 秒。等待时间范围：(0, 10]\n\n\n\n- cURL 示例\n\n```bash\ncurl \"${base_url}/delay/5\"\n```\n\n​    \n\n- HTTP 示例\n\n```http\nGET {{base_url}}/delay/5\n```\n\n",
+        "tags": [
+          "动态数据"
+        ],
+        "parameters": [
+          {
+            "name": "delay",
+            "in": "path",
+            "description": "指定延时时间（秒）。",
+            "required": true,
+            "example": "5",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132082161-run",
+        "security": []
+      }
+    },
+    "/base64": {
+      "post": {
+        "summary": "Base64 解码（Body 传参）",
+        "x-apifox-folder": "动态数据",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "Base64 解码，对 Body 中传递的 Base64 数据进行解码。\n\n\n\n\n- cURL 示例\n\n```bash\ncurl --data-urlencode 'base64=SFRUUEJJTl9HTyBpcyBhd2Vzb21l' \\\n    \"${base_url}/base64\"\n```\n\n​    \n\n- HTTP 示例\n\n```http\nPOST {{base_url}}/base64\nContent-Type: application/x-www-form-urlencoded\n\nbase64=SFRUUEJJTl9HTyBpcyBhd2Vzb21l\n```\n\n",
+        "tags": [
+          "动态数据"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "base64": {
+                    "type": "string",
+                    "description": "Base64 编码的数据",
+                    "example": "SFRUUEJJTl9HTyBpcyBhd2Vzb21l"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": "HTTPBIN_GO is awesome"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132083089-run",
+        "security": []
+      }
+    },
+    "/base64/{base64-value}": {
+      "get": {
+        "summary": "Base64 解码（Path 传参）",
+        "x-apifox-folder": "动态数据",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "Base64 解码，对 Path 中传递的 Base64 数据进行解码。\n\n\n\n\n- cURL 示例\n\n```bash\ncurl \"${base_url}/base64/SFRUUEJJTl9HTyBpcyBhd2Vzb21l\"\n```\n\n​    \n\n- HTTP 示例\n\n```http\nGET {{base_url}}/base64/SFRUUEJJTl9HTyBpcyBhd2Vzb21l\n```\n\n",
+        "tags": [
+          "动态数据"
+        ],
+        "parameters": [
+          {
+            "name": "base64-value",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": "HTTPBIN_GO is awesome"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132083092-run",
+        "security": []
+      }
+    },
+    "/status/{code}": {
+      "get": {
+        "summary": "指定返回状态码",
+        "x-apifox-folder": "状态码",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "返回指定的 Status Code 及描述。\n\n如果状态码介于 `[300, 400)` 则将 Response 的 `Location` 头指定为 `/anything`\n\n\n\n\n- cURL 示例\n\n```bash\ncurl -iL \"${base_url}/status/302\"\n```\n\n​    \n\n- HTTP 示例\n\n```http\nGET {{base_url}}/status/302\n```\n\n",
+        "tags": [
+          "状态码"
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "description": "指定要返回的状态码",
+            "required": true,
+            "example": "302",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132111635-run",
+        "security": []
+      }
+    },
+    "/detect/multipart": {
+      "post": {
+        "summary": "探测数据（multipart/form-data 形式）",
+        "x-apifox-folder": "数据探测",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "检测数据类型。\n\n\n\n\n- cURL 示例\n\n```bash\ncurl \"${base_url}/detect\" -F file=@data_file\"\n```\n\n​    \n\n- HTTP 示例\n\n```http\nPOST {{base_url}}/detect\nContent-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW\n\n------WebKitFormBoundary7MA4YWxkTrZu0gW\nContent-Disposition: form-data; name=\"file\"; filename=\"data_file\"\nContent-Type: application/octet-stream\n\n< data_file\n\n------WebKitFormBoundary7MA4YWxkTrZu0gW--\n```\n\n",
+        "tags": [
+          "数据探测"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "description": "包含数据的文件",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "file"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "size": {
+                      "type": "integer"
+                    },
+                    "Content-Type": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "size",
+                    "Content-Type",
+                    "content"
+                  ],
+                  "x-apifox-orders": [
+                    "size",
+                    "Content-Type",
+                    "content"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "size": 64057182,
+                      "Content-Type": "application/zip",
+                      "content": "PK\u0003\u0004\u0014\u0000\u0000\u0000\b\u0000{dlQ,�f �\u0000\u0000\u0000\u001f\u0001\u0000\u0000\u0019\u0000\u001c..."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132112463-run",
+        "security": []
+      }
+    },
+    "/detect/www": {
+      "post": {
+        "summary": "探测数据（application/x-www-form-urlencoded 形式）",
+        "x-apifox-folder": "数据探测",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "检测数据类型。\n\n\n\n\n- cURL 示例\n\n```bash\ncurl \"${base_url}/detect\" --data-binary @data_file\n```\n\n​    \n\n- HTTP 示例\n\n```http\nPOST {{base_url}}/detect\nContent-Type: application/x-www-form-urlencoded\n\n< data_file\n```\n\n",
+        "tags": [
+          "数据探测"
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "{{'x-www-form-urlencoded'}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/octet-stream": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "size": {
+                      "type": "integer"
+                    },
+                    "Content-Type": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "size",
+                    "Content-Type",
+                    "content"
+                  ],
+                  "x-apifox-orders": [
+                    "size",
+                    "Content-Type",
+                    "content"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "size": 64057182,
+                      "Content-Type": "application/zip",
+                      "content": "PK\u0003\u0004\u0014\u0000\u0000\u0000\b\u0000{dlQ,�f �\u0000\u0000\u0000\u001f\u0001\u0000\u0000\u0019\u0000\u001c..."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132112526-run",
+        "security": []
+      }
+    },
+    "/response-headers": {
+      "get": {
+        "summary": "指定 Response Header（GET 传参）",
+        "x-apifox-folder": "动态数据",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "指定需要在 Response 中返回的 Header。\n\n\n\n\n- cURL 示例\n\n```bash\ncurl -i \"${base_url}/response-headers?key1=value1&key2=value2\"\n```\n\n​    \n\n- HTTP 示例\n\n```http\nGET {{base_url}}/response-headers?key1=value1&key2=value2\n```\n\n",
+        "tags": [
+          "动态数据"
+        ],
+        "parameters": [
+          {
+            "name": "key1",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "value1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "key2",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "value2",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": "HTTP/1.1 200 OK\nAccess-Control-Allow-Credentials: true\nAccess-Control-Allow-Origin: *\nContent-Type: application/json\nKey1: value1\nKey2: value2\nDate: Sun, 10 Dec 2023 15:25:31 GMT\nContent-Length: 46\n\n{\n    \"key1\": \"value1\",\n    \"key2\": \"value2\"\n}"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132116768-run",
+        "security": []
+      },
+      "post": {
+        "summary": "指定 Response Header（POST 传参）",
+        "x-apifox-folder": "动态数据",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "指定需要在 Response 中返回的 Header。\n\n\n\n\n- cURL 示例\n\n```bash\ncurl -i \"${base_url}/response-headers\" \\\n     --data-urlencode 'key1=value1' \\\n     --data-urlencode 'key2=value2'\n```\n\n​    \n\n- HTTP 示例\n\n```http\nPOST {{base_url}}/response-headers\nContent-Type: application/x-www-form-urlencoded\n\nkey1=value1&key2=value2\n```\n\n",
+        "tags": [
+          "动态数据"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "key1": {
+                    "type": "string",
+                    "example": "value1"
+                  },
+                  "key2": {
+                    "type": "string",
+                    "example": "value2"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": "HTTP/1.1 200 OK\nAccess-Control-Allow-Credentials: true\nAccess-Control-Allow-Origin: *\nContent-Type: application/json\nKey1: value1\nKey2: value2\nDate: Sun, 10 Dec 2023 15:25:31 GMT\nContent-Length: 46\n\n{\n    \"key1\": \"value1\",\n    \"key2\": \"value2\"\n}"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132116886-run",
+        "security": []
+      }
+    },
+    "/image/jpeg": {
+      "get": {
+        "summary": "返回 JPEG 图像",
+        "x-apifox-folder": "图像",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "图像"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132117668-run",
+        "security": []
+      }
+    },
+    "/image/png": {
+      "get": {
+        "summary": "返回 PNG 图像",
+        "x-apifox-folder": "图像",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "图像"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132117788-run",
+        "security": []
+      }
+    },
+    "/image/svg": {
+      "get": {
+        "summary": "返回 SVG 图像",
+        "x-apifox-folder": "图像",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "图像"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132117793-run",
+        "security": []
+      }
+    },
+    "/image/webp": {
+      "get": {
+        "summary": "返回 WebP 图像",
+        "x-apifox-folder": "图像",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "图像"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132117796-run",
+        "security": []
+      }
+    },
+    "/image/gif": {
+      "get": {
+        "summary": "返回 GIF 图像",
+        "x-apifox-folder": "图像",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "图像"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132117854-run",
+        "security": []
+      }
+    },
+    "/json": {
+      "get": {
+        "summary": "返回 JSON 数据",
+        "x-apifox-folder": "文本及编码",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "文本及编码"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132117970-run",
+        "security": []
+      }
+    },
+    "/xml": {
+      "get": {
+        "summary": "返回 XML 数据",
+        "x-apifox-folder": "文本及编码",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "文本及编码"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132117989-run",
+        "security": []
+      }
+    },
+    "/html": {
+      "get": {
+        "summary": "返回 HTML 数据",
+        "x-apifox-folder": "文本及编码",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "文本及编码"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132117991-run",
+        "security": []
+      }
+    },
+    "/gzip": {
+      "get": {
+        "summary": "返回 Gzip 数据",
+        "x-apifox-folder": "文本及编码",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "文本及编码"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132117995-run",
+        "security": []
+      }
+    },
+    "/dump/request": {
+      "get": {
+        "summary": "显示请求的原始信息",
+        "x-apifox-folder": "数据倾卸",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "将请求的原始信息作为 Response 的 Body 返回。",
+        "tags": [
+          "数据倾卸"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132118029-run",
+        "security": []
+      }
+    },
+    "/encoding/utf8": {
+      "get": {
+        "summary": "返回编码为 UTF-8 的内容",
+        "x-apifox-folder": "文本及编码",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "文本及编码"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-132118050-run",
+        "security": []
+      }
+    },
+    "/data": {
+      "post": {
+        "summary": "按配置模拟返回数据",
+        "x-apifox-folder": "动态数据",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "根据配置，模拟返回数据。\n\n\n\n\n- cURL 示例\n\n```bash\ncurl \"${base_url}\" \\\n     -F 'content_file=@content_file.txt' \\\n     -F 'content=content-abc' \\\n     -F 'as_download=1' \\\n     -F 'content_type=text/plain' \\\n     -F 'download_filename=filename.txt'\n```\n\n",
+        "tags": [
+          "动态数据"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content_file": {
+                    "type": "string",
+                    "description": "使用这里上传文件的内容作为返回。",
+                    "format": "binary"
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "需要通过 Response 返回的内容。",
+                    "example": "Test text."
+                  },
+                  "as_download": {
+                    "type": "integer",
+                    "description": "返回的内容以下载形式提供。",
+                    "example": "1,true"
+                  },
+                  "download_filename": {
+                    "type": "string",
+                    "description": "指定下载时使用的文件名。",
+                    "example": "我的文件.txt"
+                  },
+                  "content_type": {
+                    "type": "string",
+                    "description": "指定通过 Response 返回内容的 Content-Type。\n如不指定或指定为 auto，则自动检测数据测 Content-Type。",
+                    "example": "application/octet-stream"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-134780462-run",
+        "security": []
+      }
+    },
+    "/web-redirect-to": {
+      "get": {
+        "summary": "页面重定向",
+        "x-apifox-folder": "重定向",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "通过返回 HTML 中的 <meta> 标签使页面重定向。\n\n如：\n```html\n<html>\n<meta http-equiv=\"refresh\" content=\"0;url=http://www.baidu.com/\">\n</html>\n```\n\n- cURL 示例\n```bash\ncurl -iL \"${base_url}/web-redirect-to?url=http://baidu.com&delay=3\"\n```\n\n- HTTP 示例\n```http\nGET {{base_url}}/web-redirect-to?url=http://baidu.com&delay=3\n```",
+        "tags": [
+          "重定向"
+        ],
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "description": "跳转到的 URL。",
+            "required": false,
+            "example": "http://baidu.com",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "delay",
+            "in": "query",
+            "description": "延迟的秒数。",
+            "required": false,
+            "example": "3",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": "<html>\n<meta http-equiv=\"refresh\" content=\"0;url=http://www.baidu.com/\">\n</html>\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-135341886-run",
+        "security": []
+      }
+    },
+    "/file/word97": {
+      "get": {
+        "summary": "返回 Word 97 格式文档",
+        "x-apifox-folder": "文件格式",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "文件格式"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-136131872-run",
+        "security": []
+      }
+    },
+    "/file/word": {
+      "get": {
+        "summary": "返回 Word 2000 之后格式文档",
+        "x-apifox-folder": "文件格式",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "文件格式"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-136131893-run",
+        "security": []
+      }
+    },
+    "/file/excel97": {
+      "get": {
+        "summary": "返回 Excel 97 格式文档",
+        "x-apifox-folder": "文件格式",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "文件格式"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-136131952-run",
+        "security": []
+      }
+    },
+    "/file/excel": {
+      "get": {
+        "summary": "返回 Excel 2000 之后格式文档",
+        "x-apifox-folder": "文件格式",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "文件格式"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-136132051-run",
+        "security": []
+      }
+    },
+    "/file/ppt97": {
+      "get": {
+        "summary": "返回 PowerPoint 97 格式文档",
+        "x-apifox-folder": "文件格式",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "文件格式"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-136132087-run",
+        "security": []
+      }
+    },
+    "/file/ppt": {
+      "get": {
+        "summary": "返回 PowerPoint 2000 之后格式文档",
+        "x-apifox-folder": "文件格式",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "文件格式"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-136132094-run",
+        "security": []
+      }
+    },
+    "/file/pdf": {
+      "get": {
+        "summary": "返回 PDF 格式文档",
+        "x-apifox-folder": "文件格式",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "文件格式"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-136132121-run",
+        "security": []
+      }
+    },
+    "/sse": {
+      "get": {
+        "summary": "SSE 模拟测试",
+        "x-apifox-folder": "动态数据",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "动态数据"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-136132186-run",
+        "security": []
+      }
+    },
+    "/bearer": {
+      "get": {
+        "summary": "Bearer 认证",
+        "x-apifox-folder": "认证",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "Bearer 身份认证测试。\n\n\n\n检查 `Authorization` 头中是否具备值为 `Bearer xxx` 形式的数据。`Bearer` **区分大小写**。\n\n如果没有取到值，则返回 401；否则返回 200 并以 JSON 形式展示数据。\n\n\n\n- cURL 示例\n\n```bash\ncurl \"${base_url}/bearer\" -i -H 'Authorization: Bearer my-token'\n```\n\n\n\n- HTTP 示例\n\n```http\nGET {{base_url}}/bearer\nAuthorization: Bearer my-token\n```",
+        "tags": [
+          "认证"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "authenticated": {
+                      "type": "boolean"
+                    },
+                    "user": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "authenticated",
+                    "user"
+                  ],
+                  "x-apifox-orders": [
+                    "authenticated",
+                    "user"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "authenticated": true,
+                      "user": "my_user_name"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "没有权限",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "异常示例",
+                    "value": "HTTP/1.1 401 Unauthorized\nAccess-Control-Allow-Credentials: true\nAccess-Control-Allow-Origin: *\nWww-Authenticate: Basic realm=\"Fake Realm\"\nDate: Sun, 10 Dec 2023 07:45:35 GMT\nContent-Length: 0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3616914/apis/api-136140185-run",
+        "security": []
+      }
+    }
+  },
+  "components": {
+    "schemas": {},
+    "securitySchemes": {}
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "正式环境"
+    }
+  ]
+}

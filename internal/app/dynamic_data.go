@@ -1,9 +1,12 @@
 package service
 
 import (
+	_ "embed"
 	"encoding/base64"
 	"fmt"
-	"io/ioutil"
+	"httpbingo/internal/httputils"
+	"io"
+	"mime/multipart"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -16,7 +19,7 @@ func ProcBase64(w http.ResponseWriter, r *http.Request) {
 	var base64Str string
 
 	if strings.EqualFold("GET", r.Method) {
-		paramArr := parsePathParams(r.URL.Path, "/base64")
+		paramArr := parsePathParams(r.URL.Path, 1)
 		if len(paramArr) > 0 {
 			base64Str = paramArr[0]
 		}
@@ -45,7 +48,7 @@ func ProcBase64(w http.ResponseWriter, r *http.Request) {
 
 func ProcDelay(w http.ResponseWriter, r *http.Request) {
 
-	pathParams := parsePathParams(r.URL.Path, "/delay/")
+	pathParams := parsePathParams(r.URL.Path, 1)
 
 	var sParam string
 	if len(pathParams) > 0 {
@@ -67,100 +70,211 @@ func ProcDelay(w http.ResponseWriter, r *http.Request) {
 	ProcAnything(w, r)
 }
 
+func readFileFromRequest(r *http.Request, fieldName string) (data []byte, err error) {
+	var contentFile multipart.File
+	// 获取文件句柄
+	if contentFile, _, err = r.FormFile(fieldName); err != nil {
+		return nil, err
+	}
 
+	// 处理正常读取文件的情况
+	defer func() {
+		_ = contentFile.Close()
+	}()
+
+	// 读取文件内容
+	if data, err = io.ReadAll(contentFile); err != nil {
+		return nil, err
+	}
+
+	return
+}
 
 func ProcData(w http.ResponseWriter, r *http.Request) {
 
-	// 内容
-	sContent := r.FormValue("content")
+	const FieldContent = "content"
+	const FieldContentType = "content_type"
+	const FieldAsDownload = "as_download"
+	const FieldDownloadFilename = "download_filename"
+	const FieldContentFile = "content_file"
+	const ContentTypeByteStream = "application/octet-stream"
 
-	// 指定通过文件获取内容
-	sDataFile := r.FormValue("content-file")
+	// 解析表单
+	if err := r.ParseMultipartForm(10 << 20); err != nil {
+		httputils.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
-	// 如果指定了 content-file，则从指定文件读取内容
-	var fileData []byte
-	if sDataFile != "" {
-		tmpFileData, readFileErr := ioutil.ReadFile(sDataFile)
-		if readFileErr != nil {
-			http.Error(w, readFileErr.Error(), http.StatusNotFound)
-			return
+	// 结果数据
+	var retData []byte
+	var err error
+
+	// 先从文件字段读取内容
+	retData, err = readFileFromRequest(r, FieldContentFile)
+
+	// 如果从文件字段没有读取到内容，则使用 文本框 输入的内容
+	if retData == nil {
+		// 文本框内容
+		sContent := r.FormValue(FieldContent)
+		// 如果读取文件报错，判断文本框内容是否为空
+		// 如果文本框内容不为空，则使用文本框内容作为返回数据
+		if sContent != "" {
+			retData = []byte(sContent)
 		} else {
-			fileData = tmpFileData
+			// 如果文本框内容也为空，则报错
+			httputils.Error(w, err.Error(), http.StatusBadRequest)
+			return
 		}
 	}
 
 	// 确定 Response Body
-	var responseBodyData []byte
-	if len(fileData) == 0 {
-		responseBodyData = []byte(sContent)
-	} else {
-		responseBodyData = fileData
+	responseBodyData := retData
+
+	// 读取用户输入的 Content-Type
+	sContentType := r.FormValue(FieldContentType)
+
+	// Content-Type 默认值 application/octet-stream
+	if sContentType == "unknown" {
+		sContentType = ContentTypeByteStream
 	}
 
-	// Content-Type
-	sContentType := r.FormValue("content-type")
-	// Content-Type 默认值 application/octet-stream
-	if sContentType == "" {
-		sContentType = "application/octet-stream"
-	}
-	// 如果 Content-Type 指定为 auto，则根据返回内容自动检测
-	if sContentType == "auto" {
+	// 如果 Content-Type 指定为 auto，或者没有指定，则根据返回内容自动检测
+	if sContentType == "" || sContentType == "auto" {
 		sContentType = http.DetectContentType(responseBodyData)
 	}
 
+	// 指定 Response 的 Content-Type
 	w.Header().Set("Content-Type", sContentType)
 
+	// 判断是否启用下载
+	if r.FormValue(FieldAsDownload) != "" {
+
+		// 处理 Content-Type 为 text/html; charset=utf8; 的情况
+		// 只取分号前面的 MIME Type 部分
+		sMIMEType, _, _ := strings.Cut(sContentType, ";")
+		// MIME Type 对应的中文描述
+		sMIMETypeDescription := mimeTypeDictionary[sMIMEType]
+
+		// 遍历对应扩展名
+		var sFileExt string
+		for k, v := range fileExtNameDictionary {
+			if v == sMIMEType {
+				sFileExt = k
+				break
+			}
+		}
+		// 默认扩展名为 dat
+		if sFileExt == "" {
+			sFileExt = "dat"
+		}
+
+		// 获取用户指定的下载文件名
+		sFilename := r.FormValue(FieldDownloadFilename)
+		sFilename = strings.TrimSpace(sFilename)
+		// 如果没有指定
+		if sFilename == "" {
+			// 则使用 MIME Type 说明作为主文件名
+			if sMIMETypeDescription != "" {
+				sFilename = sMIMETypeDescription
+			} else {
+				// 如果 sMIMETypeDescription 也为空，则使用默认值
+				sFilename = "模拟数据"
+			}
+			// 与默认扩展名组合
+			sFilename = fmt.Sprintf("%s.%s", sFilename, sFileExt)
+		}
+
+		// 文件名 url 编码
+		sFilename = url.QueryEscape(sFilename)
+		// 通过 Response Header 指定下载信息
+		// 指定文件名，正常情况根据指定文件名及编码进行下载；对于不支持编码的情况，采用 ASCII 文件名 file.dat
+		sContentDisposition := fmt.Sprintf("attachment; filename=\"file.dat\"; filename*=utf-8''%s", sFilename)
+
+		// 指定 Response 的 Content-Disposition 头
+		w.Header().Set("Content-Disposition", sContentDisposition)
+	}
 	_, _ = w.Write(responseBodyData)
 }
 
+//go:embed resource/web/content_config.html
+var dataContentUploaderHtml []byte
 
-func ProcDownload(w http.ResponseWriter, r *http.Request) {
-
-	// 指定默认文件名
-	sFilename := r.FormValue("filename")
-	if sFilename == "" {
-		sFilename = "测试.dat"
-	}
-
-	// 文件名 url 编码
-	sFilename = url.QueryEscape(sFilename)
-	// 通过 Response Header 指定下载信息
-	// 指定文件名，正常情况根据指定文件名及编码进行下载；对于不支持编码的情况，采用 ASCII 文件名 file.dat
-	sContentDisposition := fmt.Sprintf("attachment; filename=\"file.dat\"; filename*=utf-8''%s", sFilename)
-
-	w.Header().Set("Content-Disposition", sContentDisposition)
-
-	ProcData(w, r)
+func init() {
+	http.HandleFunc("/data/config", func(writer http.ResponseWriter, request *http.Request) {
+		_, _ = writer.Write(dataContentUploaderHtml)
+	})
 }
 
+func ProcSSE(w http.ResponseWriter, r *http.Request) {
+	// 设置响应头，指定SSE的Content-Type和缓存控制
+	w.Header().Set("Content-Type", "text/event-stream")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Connection", "keep-alive")
 
-
-func ProcDetect(w http.ResponseWriter, r *http.Request) {
-	type DataInfo struct {
-		Size        int    `json:"size"`
-		ContentType string `json:"Content-Type"`
-		Content     string `json:"content"`
+	// 在这个示例中，我们每秒向客户端发送一个简单的消息
+	for i := 0; i < 10; i++ {
+		message := fmt.Sprintf("Message %d at %s", i, time.Now().Format(time.RFC3339))
+		// 将事件发送到客户端
+		_, _ = fmt.Fprintf(w, "data: %s\n\n", message)
+		// 强制刷新响应，确保事件立即发送到客户端
+		w.(http.Flusher).Flush()
+		time.Sleep(1 * time.Second)
 	}
-	// 读取 body 数据
-	dataBytes, _ := ioutil.ReadAll(r.Body)
+}
 
-	// 检测或指定数据类型
-	sContentType := http.DetectContentType(dataBytes)
+const sseTestPage = `
+<!DOCTYPE html>
+<html lang="zh-CN">
 
-	var sContent string
-	var displayBytes []byte
-	if len(dataBytes) > 50 {
-		displayBytes = dataBytes[:50]
-		sContent = string(displayBytes) + "..."
-	} else {
-		sContent = string(dataBytes)
-	}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSE 测试页面</title>
+</head>
 
-	dataInfo := DataInfo{
-		Size: len(dataBytes),
-		ContentType: sContentType,
-		Content: sContent,
-	}
+<body>
+    <h1>SSE 测试</h1>
 
-	writeJSONResponse(dataInfo, w)
+    <ul>
+        <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events" target="_blank"
+                rel="noopener noreferrer">Server-sent events</a></li>
+        <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events"
+                target="_blank" rel="noopener noreferrer">Using server-sent events</a></li>
+        <li><a href="https://www.ruanyifeng.com/blog/2017/05/server-sent_events.html" target="_blank"
+                rel="noopener noreferrer">Server-Sent Events 教程</a></li>
+    </ul>
+
+	<br>
+	测试数据：<br>
+    <pre id="sse-content" style="background-color: bisque;"></pre>
+
+    <script>
+        // 创建一个EventSource对象，连接到SSE服务端点
+        const eventSource = new EventSource("../sse");
+
+        // 处理接收到的事件
+        eventSource.onmessage = function (event) {
+            // 在页面上显示接收到的消息
+            const sseContent = document.getElementById("sse-content");
+            sseContent.innerHTML += event.data + "<br>";
+        };
+
+        // 处理连接错误
+        eventSource.onerror = function (error) {
+            console.error("EventSource failed:", error);
+            eventSource.close();
+        };
+    </script>
+
+
+</body>
+
+</html>
+`
+
+func init() {
+	http.HandleFunc("/sse", ProcSSE)
+	http.HandleFunc("/sse/test", func(writer http.ResponseWriter, request *http.Request) {
+		_, _ = writer.Write([]byte(sseTestPage))
+	})
 }

@@ -10,22 +10,22 @@ Usage of httpbin_go server:
 HTTP client use example:
 
   - Show full HTML help page
-  Use a web browser to visit http://${host}:${port}/help
+  Use a web browser to visit ${base_url}/help
 
   - Get complete information of client request
-  $ curl --data-urlencode "param1=content1" --data-urlencode "param2=content2" "http://${host}:${port}/anything?arg1=val1&arg2=val2"
+  $ curl --data-urlencode "param1=content1" --data-urlencode "param2=content2" "${base_url}/anything?arg1=val1&arg2=val2"
 
   - Get the cookie information requested by the client
-  $ curl "http://${host}:${port}/cookies"
+  $ curl "${base_url}/cookies"
 
   - Let the server return the Redirect command
-  $ curl -iL "http://${host}:${port}/redirect-to?url=http://${host}:${port}/anything&status_code=302"
+  $ curl -iL "${base_url}/redirect-to?url=${base_url}/anything&status_code=302"
 
   - Specify the server to set cookies through Response
-  $ curl -iL -c "cookie.txt" "http://${host}:${port}/cookies/set?key1=val1&key2=val2"
+  $ curl -iL -c "cookie.txt" "${base_url}/cookies/set?key1=val1&key2=val2"
 
   - Specify the server to set cookies through Response, you can set cookie details
-  $ curl -iL -c "cookie.txt" "http://${host}:${port}/cookies/set-detail/key/value?secure=0&httponly=1"
+  $ curl -iL -c "cookie.txt" "${base_url}/cookies/set-detail/key/value?secure=0&httponly=1"
 
   - Specify to let the server delete cookies through Response
-  $ curl -iL -c "cookie.txt" "http://${host}:${port}/cookies/delete?key1=&key2="
+  $ curl -iL -c "cookie.txt" "${base_url}/cookies/delete?key1=&key2="
