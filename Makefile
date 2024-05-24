@@ -21,7 +21,8 @@ gen_swagger:
 
 # 生成 RapiDoc
 gen_rapidoc:
-	cp api/openapi-spec/HTTPBinGo.openapi.yaml cmd/httpbingo/doc/html/rapidoc/specs/temp.yaml
+	specs_dir=cmd/httpbingo/doc/html/rapidoc/specs ; mkdir -p "$$specs_dir" ; \
+		cp api/openapi-spec/HTTPBinGo.openapi.yaml "$$specs_dir/temp.yaml"
 
 # 生成所有格式文档
 all_doc: prepare_doc convert_json_yaml gen_redoc gen_swagger gen_rapidoc
