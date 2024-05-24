@@ -18,7 +18,11 @@ func main() {
 
 	var nPort int
 	var bHelp bool
+	var bBriefVerInfo bool
+	var bDetailVerInfo bool
 	flag.BoolVar(&bHelp, "h", false, "Display this help screen")
+	flag.BoolVar(&bBriefVerInfo, "v", false, "Display version information")
+	flag.BoolVar(&bDetailVerInfo, "V", false, "Display detail build information")
 	flag.IntVar(&nPort, "p", 8080, "Bind and listen for incoming requests")
 
 	flag.Parse()
@@ -28,6 +32,16 @@ func main() {
 	if bHelp {
 		//showUsage()
 		service.ShowSummary()
+		os.Exit(0)
+	}
+
+	if bBriefVerInfo {
+		service.ShowBriefVerInfo()
+		os.Exit(0)
+	}
+
+	if bDetailVerInfo {
+		service.ShowDetailVerInfo()
 		os.Exit(0)
 	}
 
@@ -42,7 +56,7 @@ func main() {
 		Handler: &logMiddleware,
 	}
 	startServeErr := httpServer.ListenAndServe()
-	//startServeErr := http.ListenAndServe(sPort, &logMiddleware)
+	//startServeErr :   = http.ListenAndServe(sPort, &logMiddleware)
 	if startServeErr != nil {
 		log.Println(startServeErr)
 	}
