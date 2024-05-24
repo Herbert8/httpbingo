@@ -5,6 +5,8 @@ debugging of its own HTTP request.
 
 Usage of httpbin_go server:
   -h	Display this help screen
+  -v    Show short version information
+  -V    Show detail version information
   -p	Bind and listen for incoming requests (default 8080)
 
 HTTP client use example:

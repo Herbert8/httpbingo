@@ -24,8 +24,15 @@ gen_bin_file () {
 
 
 do_build () {
+    # 输出目录
+    local output_dir=$BASE_DIR/../build
+    # 由于 macOS 版的 realpath 必须针对存在的路径操作，所以先创建，再取绝对路径
+    mkdir -p "$output_dir" && output_dir=$(realpath "$output_dir")
+
+    # 输出文件
     local output_file
-    output_file=$(realpath "$BASE_DIR/../build")/$(gen_bin_file)
+    output_file=$output_dir/$(gen_bin_file)
+
     local cmd_line=(go build --ldflags="-s -w" "$@" -o "$output_file" "$MODULE_PATH")
     echo "[ OS: $os  Architecture: $arch ]"
     echo "${cmd_line[@]}"

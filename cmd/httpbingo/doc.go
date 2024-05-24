@@ -8,8 +8,8 @@ import (
 )
 import _ "embed"
 
-//go:embed doc/html/manual.html
-var helpData []byte
+////go:embed doc/html/manual.html
+//var helpData []byte
 
 //go:embed doc/html/redoc.html
 var redocData []byte
@@ -23,11 +23,11 @@ var docData embed.FS
 // 此时 docData 映射到 doc 所在目录，即 doc 的上层
 
 func init() {
-	helpFunc := func(writer http.ResponseWriter, request *http.Request) {
-		_, _ = writer.Write(helpData)
-	}
+	//helpFunc := func(writer http.ResponseWriter, request *http.Request) {
+	//	_, _ = writer.Write(helpData)
+	//}
 	//http.HandleFunc("/", helpFunc)
-	http.HandleFunc("/help", helpFunc)
+	//http.HandleFunc("/help", helpFunc)
 
 	redocFunc := func(writer http.ResponseWriter, request *http.Request) {
 		_, _ = writer.Write(redocData)

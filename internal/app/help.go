@@ -8,8 +8,22 @@ import (
 //go:embed resource/doc/plain/usage.txt
 var sConsoleHelp string
 
+//go:embed resource/build_info/brief_ver_info.txt
+var sBriefVerInfo string
+
+//go:embed resource/build_info/detail_ver_info.txt
+var sDetailVerInfo string
+
 func ShowSummary() {
 	fmt.Println(sConsoleHelp)
+}
+
+func ShowBriefVerInfo() {
+	fmt.Println(sBriefVerInfo)
+}
+
+func ShowDetailVerInfo() {
+	fmt.Println(sDetailVerInfo)
 }
 
 //func showSummary() {
