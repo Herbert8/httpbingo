@@ -18,7 +18,7 @@ SUPPORTED_PLATFORMS_LIST=(
 	# linux/386
 	linux/amd64
 	# linux/arm
-	# linux/arm64
+	linux/arm64
 	# linux/mips
 	# linux/mips64
 	# linux/mips64le
@@ -43,5 +43,5 @@ SUPPORTED_PLATFORMS_LIST=(
 	# windows/386
 	windows/amd64
 	# windows/arm
-	# windows/arm64
+	windows/arm64
 )

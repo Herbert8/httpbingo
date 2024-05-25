@@ -1,10 +1,8 @@
 
-distribute: release_rebuild
-	bash scripts/release.sh
+release_rebuild: all_doc build
 
 release: all_doc compile
 
-release_rebuild: all_doc build
 
 prepare_doc: gen_redoc gen_swagger gen_rapidoc
 
