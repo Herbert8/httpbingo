@@ -1,4 +1,7 @@
 
+distribute: release_rebuild
+	bash scripts/release.sh
+
 release: all_doc compile
 
 release_rebuild: all_doc build
